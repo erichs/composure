@@ -5,7 +5,7 @@ source_composure() {
 
   bind '"\C-j": edit-and-execute-command'
 
-  last_cmd() { fc -ln -1; }
+  last_cmd() { echo $(fc -ln -1); }
 
   name ()
   { local name=$1
@@ -52,4 +52,6 @@ if [[ "$BASH_SOURCE" == "$0" ]]; then
   install_composure
 else
   source_composure
+  unset install_composure
+  unset source_composure
 fi
