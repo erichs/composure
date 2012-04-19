@@ -13,7 +13,7 @@ first-class programming language.
 
  * name()    : create function from last command
  * write()   : write out definition of a function
- * r [<str>] : redo last command, or last command matching <str>
+ * r < str > : redo last command, or last command matching < str >
  * sl        : sudo last command
  * Ctrl-j    : 'jump' from prompt into $EDITOR
 
