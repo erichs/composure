@@ -22,3 +22,10 @@ first-class programming language.
 I like to keep configuration source files in my ~/conf directory. You'll likely
 have a different preference. That's okay, just put composure.sh where you'd
 like it to live and execute it. It will install itself automatically.
+
+Try:
+```bash
+    > cd ~/some/path
+    > curl http://git.io/composure > composure.sh
+    > chmod +x composure.sh
+    > ./composure.sh
