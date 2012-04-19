@@ -1,6 +1,13 @@
-# Composure: don't fear the UNIX chainsaw
+# Composure: don't fear the Unix chainsaw
 
-    > Don't just operate, create.
+Based on ideas from Gary Bernhardt's talk [The Unix
+Chainsaw](http://www.confreaks.com/videos/615-cascadiaruby2011-the-unix-chainsaw).
+
+This light-hearted shell script aims to help you treat your shell like a
+first-class programming language.
+
+* Grow shell functions organically from your command line history.
+* Abstract shell functions into executable scripts.
 
 ## What's included:
 
