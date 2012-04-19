@@ -1,6 +1,6 @@
 # Composure: don't fear the Unix chainsaw
 
-Based on ideas from Gary Bernhardt's talk [The Unix
+Based on ideas from Gary Bernhardt's hilarious talk [The Unix
 Chainsaw](http://www.confreaks.com/videos/615-cascadiaruby2011-the-unix-chainsaw).
 
 This light-hearted shell script aims to help you treat your shell like a
@@ -13,7 +13,7 @@ first-class programming language.
 
  * name()    : create function from last command
  * write()   : write out definition of a function
- * r < str > : redo last command, or last command matching < str >
+ * r [ str ] : redo last command, or last command matching < str >
  * sl        : sudo last command
  * Ctrl-j    : 'jump' from prompt into $EDITOR
 
