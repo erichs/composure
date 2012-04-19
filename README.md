@@ -24,6 +24,7 @@ have a different preference. That's okay, just put composure.sh where you'd
 like it to live and execute it. It will install itself automatically.
 
 Try:
+
 ```bash
     $ cd ~/some/path
     $ curl http://git.io/composure > composure.sh
