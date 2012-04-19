@@ -1,7 +1,9 @@
 #!/bin/bash
 
 source_composure() {
-  export EDITOR=vi
+  if [ -z "$EDITOR" ]; then
+    export EDITOR=vi
+  fi
 
   bind '"\C-j": edit-and-execute-command'
 
@@ -29,7 +31,7 @@ install_composure() {
   while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done
   DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-  # make Vim automatically chmod +x for files with #! lines
+  # vim: automatically chmod +x scripts with #! lines
   done_previously() { [ ! -z "$(grep BufWritePost | grep bin | grep chmod)" ]; }
 
   if ! $(<~/.vimrc done_previously); then
@@ -52,6 +54,5 @@ if [[ "$BASH_SOURCE" == "$0" ]]; then
   install_composure
 else
   source_composure
-  unset install_composure
-  unset source_composure
+  unset install_composure source_composure
 fi
