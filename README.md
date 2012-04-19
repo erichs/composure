@@ -25,7 +25,8 @@ like it to live and execute it. It will install itself automatically.
 
 Try:
 ```bash
-    > cd ~/some/path
-    > curl http://git.io/composure > composure.sh
-    > chmod +x composure.sh
-    > ./composure.sh
+    $ cd ~/some/path
+    $ curl http://git.io/composure > composure.sh
+    $ chmod +x composure.sh
+    $ ./composure.sh
+```
