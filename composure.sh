@@ -5,7 +5,9 @@ source_composure() {
     export EDITOR=vi
   fi
 
-  bind '"\C-j": edit-and-execute-command'
+  if $(tty -s); then  # is this a TTY?
+    bind '"\C-j": edit-and-execute-command'
+  fi
 
   last_cmd() { echo $(fc -ln -1); }
 
