@@ -16,11 +16,11 @@ source_composure() {
       eval "$keyword() { :; }"
   }
 
-  for word in about param; do
+  for word in about param example; do
       meta-keyword $word
   done
 
-  last_cmd() {
+  last-cmd() {
       about displays last command from history
       echo $(fc -ln -1)
   }
@@ -29,7 +29,7 @@ source_composure() {
     about wraps last command into a new function
     param 1: name to give function
     local name=$1
-    eval 'function ' $name ' { ' $(last_cmd) '; }'
+    eval 'function ' $name ' { ' $(last-cmd) '; }'
   }
 
   write() {
@@ -43,6 +43,7 @@ source_composure() {
       about prints function metadata associated with keyword
       param 1: function name
       param 2: meta keyword
+      example meta-for func-help about
       local func=$1 keyword=$2
       write $func | sed -n "s/^ *$keyword \([^([].*\).$/\1/p"
   }
@@ -58,14 +59,59 @@ source_composure() {
   }
 
   func-help() {
-      about displays help summary for all functions
-      for func in $(compgen -A function); do
+      about displays help summary for all functions, or help for specific function
+      param 1: optional, function name
+      example func-help
+      example func-help meta-for
+
+      help ()
+      {
+          local func=$1
+          printline ()
+          {
+              local metadata=$1
+              OLD=$IFS; IFS=$'\n'
+              for line in $metadata
+              do
+                  printf "%30s%s\n" ' ' "$line"
+              done
+              IFS=$OLD
+          }
+
           describe $func
-      done
+
+          local params="$(meta-for $func param)"
+          if [[ -n "$params" ]]
+          then
+              echo "parameters:"
+              printline "$params"
+          fi
+
+          local examples="$(meta-for $func example)"
+          if [[ -n "$examples" ]]
+          then
+              echo "examples:"
+              printline "$examples"
+          fi
+
+          unset printline
+      }
+
+      if [[ -n "$1" ]]
+      then
+          help $1
+      else
+          for func in $(compgen -A function); do
+              describe $func
+          done
+      fi
+
+      unset help
   }
 
+
   alias r='fc -s'
-  alias sl='eval sudo $(last_cmd)'
+  alias sl='eval sudo $(last-cmd)'
 
 }
 
