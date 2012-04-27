@@ -26,7 +26,7 @@ source_composure ()
 
   cite about param example
 
-  last-cmd ()
+  lastcmd ()
   {
       about displays last command from history
       param none
@@ -41,7 +41,7 @@ source_composure ()
     example $ name list
     example $ list
     local name=$1
-    eval 'function ' $name ' { ' $(last-cmd) '; }'
+    eval 'function ' $name ' { ' $(lastcmd) '; }'
   }
 
   pen ()
@@ -64,22 +64,22 @@ source_composure ()
       rm /tmp/$1.bash
   }
 
-  meta-for ()
+  metafor ()
   {
       about prints function metadata associated with keyword
       param 1: function name
       param 2: meta keyword
-      example meta-for func-help about
+      example metafor reference example
       local func=$1 keyword=$2
       pen $func | sed -n "s/^ *$keyword \([^([].*\)$/\1/p"
   }
 
-  func-help ()
+  reference ()
   {
       about displays help summary for all functions, or help for specific function
       param 1: optional, function name
-      example func-help
-      example func-help meta-for
+      example reference
+      example reference metafor
 
       printline ()
       {
@@ -103,17 +103,17 @@ source_composure ()
       {
           local func=$1
 
-          local about="$(meta-for $func about)"
+          local about="$(metafor $func about)"
           printline "$about" $func
 
-          local params="$(meta-for $func param)"
+          local params="$(metafor $func param)"
           if [[ -n "$params" ]]
           then
               echo "parameters:"
               printline "$params"
           fi
 
-          local examples="$(meta-for $func example)"
+          local examples="$(metafor $func example)"
           if [[ -n "$examples" ]]
           then
               echo "examples:"
@@ -128,7 +128,7 @@ source_composure ()
           help $1
       else
           for func in $(compgen -A function); do
-              local about="$(meta-for $func about)"
+              local about="$(metafor $func about)"
               printline "$about" $func
           done
       fi
@@ -138,7 +138,7 @@ source_composure ()
 
 
   alias r='fc -s'
-  alias sl='eval sudo $(last-cmd)'
+  alias sl='eval sudo $(lastcmd)'
 
 }
 
