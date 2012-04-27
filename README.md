@@ -7,8 +7,8 @@ This light-hearted shell script aims to help you treat your shell like a
 first-class programming language.
 
 * Grow shell functions organically from your command line history.
-* Abstract shell functions into executable scripts.
 * Inline arbitrary metadata in your shell functions
+* Abstract shell functions into executable scripts.
 
 ## What's included:
 
