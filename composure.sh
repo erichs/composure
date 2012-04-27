@@ -1,7 +1,11 @@
 #!/bin/bash
+# Composure - don't fear the UNIX chainsaw...
+# by erichs, 2012
 
-# ghostwrite                    write for someone else
-# lexicon                       vocabulary of a person, language, or branch of knowledge
+# these are a set of light-hearted shell functions that aim to make
+# programming the shell easier and more intuitive
+
+# latest source available at http://git.io/composure
 
 source_composure ()
 {
