@@ -58,8 +58,9 @@ source_composure ()
   revise ()
   {
       about loads function into editor for revision
-      param 1: function name
-      example revise myfunction
+      param name of function or functions, separated by spaces
+      example $ revise myfunction
+      example $ revise func1 func2 func3
       local temp=$(mktemp /tmp/revise.XXXX)
       write $* > $temp
       $EDITOR $temp
@@ -72,7 +73,7 @@ source_composure ()
       about prints function metadata associated with keyword
       param 1: function name
       param 2: meta keyword
-      example metafor reference example
+      example $ metafor reference example
       local func=$1 keyword=$2
       write $func | sed -n "s/^ *$keyword \([^([].*\)$/\1/p"
   }
@@ -81,8 +82,8 @@ source_composure ()
   {
       about displays help summary for all functions, or help for specific function
       param 1: optional, function name
-      example reference
-      example reference metafor
+      example $ reference
+      example $ reference metafor
 
       printline ()
       {
@@ -97,7 +98,7 @@ source_composure ()
           local line
           for line in $metadata
           do
-              printf "%-30s%s\n" $lhs $line
+              printf "%-20s%s\n" $lhs $line
           done
           IFS=$OLD
       }
