@@ -91,6 +91,7 @@ source_composure ()
           fi
 
           OLD=$IFS; IFS=$'\n'
+          local line
           for line in $metadata
           do
               printf "%-30s%s\n" $lhs $line
