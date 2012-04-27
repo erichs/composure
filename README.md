@@ -14,13 +14,10 @@ first-class programming language.
 
  * cite      : creates a new meta keyword for use in your functions
  * draft     : wraps last command into a new function
- * lastcmd   : displays last command from history
  * metafor   : prints function metadata associated with keyword
  * reference : displays help summary for all functions, or help for specific function
  * revise    : loads function into editor for revision
  * write     : prints function declaration to stdout
- * r [ str ] : redo last command, or last command matching 'str'
- * sl        : sudo last command
  * Ctrl-j    : 'jump' from prompt into $EDITOR
 
 ## Installing

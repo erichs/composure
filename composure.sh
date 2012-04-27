@@ -25,13 +25,6 @@ source_composure ()
 
   cite about param example
 
-  lastcmd ()
-  {
-      about displays last command from history
-      param none
-      echo $(fc -ln -1)
-  }
-
   draft ()
   {
     about wraps last command into a new function
@@ -40,7 +33,7 @@ source_composure ()
     example $ draft list
     example $ list
     local name=$1
-    eval 'function ' $name ' { ' $(lastcmd) '; }'
+    eval 'function ' $name ' { ' $(fc -ln -1) '; }'
   }
 
   write ()
@@ -134,10 +127,6 @@ source_composure ()
 
       unset help printline
   }
-
-
-  alias r='fc -s'
-  alias sl='eval sudo $(lastcmd)'
 
 }
 
