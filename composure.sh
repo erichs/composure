@@ -24,13 +24,12 @@ source_composure ()
       about () { :; }
       about creates a new meta keyword for use in your functions
       local keyword=$1
-      eval "$keyword() { :; }"
+      for keyword in $*; do
+          eval "function $keyword { :; }"
+      done
   }
 
-  local keyword
-  for keyword in about param example; do
-      cite $keyword
-  done
+  cite about param example
 
   last-cmd ()
   {
