@@ -11,8 +11,13 @@ first-class programming language.
 
 ## What's included:
 
- * name()    : create function from last command
- * write()   : write out definition of a function
+ * cite      : creates a new meta keyword for use in your functions
+ * func-help : displays help summary for all functions, or help for specific function
+ * last-cmd  : displays last command from history
+ * meta-for  : prints function metadata associated with keyword
+ * name      : wraps last command into a new function
+ * pen       : prints function declaration to stdout
+ * revise    : loads function into editor for revision
  * r [ str ] : redo last command, or last command matching 'str'
  * sl        : sudo last command
  * Ctrl-j    : 'jump' from prompt into $EDITOR
