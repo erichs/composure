@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# draft                         write a first version to be filled out and polished later
 # ghostwrite                    write for someone else
 # lexicon                       vocabulary of a person, language, or branch of knowledge
 
@@ -33,18 +32,18 @@ source_composure ()
       echo $(fc -ln -1)
   }
 
-  name ()
+  draft ()
   {
     about wraps last command into a new function
     param 1: name to give function
     example $ ls
-    example $ name list
+    example $ draft list
     example $ list
     local name=$1
     eval 'function ' $name ' { ' $(lastcmd) '; }'
   }
 
-  pen ()
+  write ()
   {
     about prints function declaration to stdout
     param 1: name of function
@@ -58,7 +57,7 @@ source_composure ()
       about loads function into editor for revision
       param 1: function name
       example revise myfunction
-      pen $1 > /tmp/$1.bash
+      write $1 > /tmp/$1.bash
       $EDITOR /tmp/$1.bash
       eval "$(cat /tmp/$1.bash)"
       rm /tmp/$1.bash
@@ -71,7 +70,7 @@ source_composure ()
       param 2: meta keyword
       example metafor reference example
       local func=$1 keyword=$2
-      pen $func | sed -n "s/^ *$keyword \([^([].*\)$/\1/p"
+      write $func | sed -n "s/^ *$keyword \([^([].*\)$/\1/p"
   }
 
   reference ()
