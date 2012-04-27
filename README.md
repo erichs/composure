@@ -8,6 +8,7 @@ first-class programming language.
 
 * Grow shell functions organically from your command line history.
 * Abstract shell functions into executable scripts.
+* Inline arbitrary metadata in your shell functions
 
 ## What's included:
 
