@@ -2,12 +2,10 @@
 # TODO: conditionally remove trailing semicolons from declare -f
 
 # annotate                      add explanatory notes or comments
-# cite                          refer to
 # draft                         write a first version to be filled out and polished later
 # edit                          correct, condense, collect, arrange or modify text for publication
 # ghostwrite                    write for someone else
 # lexicon                       vocabulary of a person, language, or branch of knowledge
-# pen                           to write or compose
 # redact                        edit for publication
 # rewrite                       write again so as to alter or improve
 
@@ -21,20 +19,23 @@ source_composure ()
     bind '"\C-j": edit-and-execute-command'
   fi
 
-  meta-keyword ()
+  cite ()
   {
-      : creates a new meta keyword for use in your functions
+      about () { :; }
+      about creates a new meta keyword for use in your functions
       local keyword=$1
       eval "$keyword() { :; }"
   }
 
-  for word in about param example; do
-      meta-keyword $word
+  local keyword
+  for keyword in about param example; do
+      cite $keyword
   done
 
   last-cmd ()
   {
       about displays last command from history
+      param none
       echo $(fc -ln -1)
   }
 
