@@ -166,11 +166,12 @@ install_composure ()
     fi
 
     # source this file in your startup: .bashrc, or .bash_profile
+    local done=0
     done_previously () { [ ! -z "$(grep source | grep $DIR | grep composure)" ]; }
 
-    local done=0
     [ -f ~/.bashrc ] && $(<~/.bashrc done_previously) && done=1
     ! (($done)) && [ -f ~/.bash_profile ] && $(<~/.bash_profile done_previously) && done=1
+
     if ! (($done))
     then
       echo 'sourcing composure from .bashrc...'
