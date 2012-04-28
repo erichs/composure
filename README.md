@@ -6,9 +6,9 @@ Chainsaw](http://www.confreaks.com/videos/615-cascadiaruby2011-the-unix-chainsaw
 This light-hearted shell script aims to help you treat your shell like a
 first-class programming language.
 
-* Grow shell functions organically from your command line history.
+* Grow shell functions organically from your command line history
 * Inline arbitrary metadata in your shell functions
-* Abstract shell functions into executable scripts.
+* Abstract shell functions into executable scripts
 
 ## What's included:
 
