@@ -89,7 +89,7 @@ source_composure ()
 
         printline ()
         {
-            local metadata=$1 lhs=${2:- }
+            local metadata=$1 left=${2:- } right
 
             if [[ -z "$metadata" ]]
             then
@@ -97,10 +97,9 @@ source_composure ()
             fi
 
             OLD=$IFS; IFS=$'\n'
-            local line
-            for line in $metadata
+            for right in $metadata
             do
-                printf "%-20s%s\n" $lhs $line
+                printf "%-20s%s\n" $left $right
             done
             IFS=$OLD
         }
