@@ -28,6 +28,8 @@ Check out composure in action. In the asciicast below, we'll:
  * compose a function to find those functions
  * compose a function that displays group api documentation
 
+Here's the asciicast: [Composure Demo](http://ascii.io/a/435)
+
 ## Installing
 
 I like to keep configuration source files in my ~/conf directory. You'll likely
