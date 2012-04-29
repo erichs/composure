@@ -20,6 +20,14 @@ first-class programming language.
  * write     : prints function declaration to stdout
  * Ctrl-j    : 'jump' from prompt into $EDITOR
 
+## Seriously, what?
+
+Check out composure in action. In the asciicast below, we'll:
+
+ * attach metadata grouping to some functions
+ * compose a function to find those functions
+ * compose a function that displays group api documentation
+
 ## Installing
 
 I like to keep configuration source files in my ~/conf directory. You'll likely
