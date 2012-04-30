@@ -43,7 +43,7 @@ Retrieve your metadata later by calling 'metafor ()':
 
 By default, composure knows the keywords: about, param, and example.
 
-The default keywords are used by the integrated help system:
+The default keywords are used by the help system:
 
 ## Intuitive help system
 
