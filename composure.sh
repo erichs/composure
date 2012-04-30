@@ -38,8 +38,14 @@ source_composure ()
       example $ ls
       example $ draft list
       example $ list
-      local name=$1
-      eval 'function ' $name ' { ' $(fc -ln -1) '; }'
+      local func=$1
+      eval 'function ' $func ' { ' $(fc -ln -1) '; }'
+      write $func > ~/.composure/$func.sh
+      (
+          cd ~/.composure
+          git add --all .
+          git commit -m "draft $func"
+      )
     }
 
     write ()
@@ -63,10 +69,22 @@ source_composure ()
         param name of function or functions, separated by spaces
         example $ revise myfunction
         example $ revise func1 func2 func3
+
         local temp=$(mktemp /tmp/revise.XXXX)
+
         write $* > $temp
         $EDITOR $temp
         eval "$(cat $temp)"
+
+        for func in $*
+        do
+            write $func > ~/.composure/$func.sh
+        done
+        (
+            cd ~/.composure
+            git add --all .
+            git commit -m "revise $*"
+        )
         rm $temp
     }
 
@@ -89,7 +107,7 @@ source_composure ()
 
         printline ()
         {
-            local metadata=$1 left=${2:- } right
+            local metadata=$1 leftcol=${2:- } rightcol
 
             if [[ -z "$metadata" ]]
             then
@@ -97,9 +115,9 @@ source_composure ()
             fi
 
             OLD=$IFS; IFS=$'\n'
-            for right in $metadata
+            for rightcol in $metadata
             do
-                printf "%-20s%s\n" $left $right
+                printf "%-20s%s\n" $leftcol $rightcol
             done
             IFS=$OLD
         }
