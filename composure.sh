@@ -33,24 +33,19 @@ source_composure ()
 
     draft ()
     {
-      about wraps last command into a new function
-      param 1: name to give function
-      example $ ls
-      example $ draft list
-      example $ list
-      local func=$1
-      eval 'function ' $func ' { ' $(fc -ln -1) '; }'
-      write $func > ~/.composure/$func.sh
-      (
-          cd ~/.composure
-          git add --all .
-          git commit -m "draft $func"
-      )
+        about wraps last command into a new function
+        param 1: name to give function
+        example $ ls
+        example $ draft list
+        example $ list
+        local func=$1
+        eval 'function ' $func ' { ' $(fc -ln -1) '; }'
+        gitonlyknows $func draft
     }
 
     gitonlyknows ()
     {
-        about store function in .composure git repository
+        about store function in ~/.composure git repository
         param 1: name of function
         param 2: operation label
         example $ gitonlyknows myfunc 'scooby-doo version'
@@ -124,8 +119,6 @@ source_composure ()
                 echo "examples:"
                 printline "$examples"
             fi
-
-            unset printline
         }
 
         if [[ -n "$1" ]]
@@ -156,13 +149,8 @@ source_composure ()
 
         for func in $*
         do
-            write $func > ~/.composure/$func.sh
+            gitonlyknows $func revise
         done
-        (
-            cd ~/.composure
-            git add --all .
-            git commit -m "revise $*"
-        )
         rm $temp
     }
 
