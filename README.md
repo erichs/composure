@@ -51,6 +51,24 @@ The 'reference ()' function will automatically summarize all functions with
 'about' metadata. If called with a function name as a parameter, it will
 display apidoc-style help for that function.
 
+```bash
+  $ reference   # displays:
+  cite                creates a new meta keyword for use in your functions
+  draft               wraps last command into a new function
+  gitonlyknows        store function in ~/.composure git repository
+  metafor             prints function metadata associated with keyword
+  reference           displays help summary for all functions, or help for specific function
+  revise              loads function into editor for revision
+  write               prints function declaration to stdout
+```
+
+and
+
+```bash
+  $ reference cite  # displays
+  cite                creates a new meta keyword for use in your functions
+```
+
 ## Git integration
 
 If you already have git installed, composure will initialize a ~/.composure
@@ -68,6 +86,17 @@ Why do this?
    gems
  * every version of every function you write is always
    available to you via basic git commands
+
+try:
+
+```bash
+  $ ls -l | awk '{print $1 " " $3 " " $5  " " $9}'
+  $ draft lsl
+  $ unset -f lsl
+  $ lsl  # displays -bash: lsl: command not found
+  $ source ~/.composure/lsl.sh
+  $ lsl  # joy!
+```
 
 ## What's included:
 
