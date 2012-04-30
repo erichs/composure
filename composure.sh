@@ -54,7 +54,7 @@ source_composure ()
         local func=$1
         local operation="$2"
 
-        if git --version 2>&1 >/dev/null
+        if git --version >/dev/null 2>&1
         then
             write $func > ~/.composure/$func.sh
             (
@@ -208,7 +208,7 @@ install_composure ()
     fi
 
     # prepare git repo
-    if git --version 2>&1 >/dev/null
+    if git --version >/dev/null 2>&1
     then
         if [ ! -d ~/.composure ]
         then
