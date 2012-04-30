@@ -38,7 +38,7 @@ keyword(s), and use them freely in your functions:
 Retrieve your metadata later by calling 'metafor ()':
 
 ```bash
-  metafor foo about  # displays 'perform mad script-foo'
+  metafor foo about  # displays: 'perform mad script-foo'
 ```
 
 By default, composure knows the keywords: about, param, and example.
@@ -65,7 +65,7 @@ display apidoc-style help for that function.
 and
 
 ```bash
-  $ reference cite  # displays
+  $ reference cite  # displays:
   cite                creates a new meta keyword for use in your functions
 ```
 
@@ -93,7 +93,7 @@ try:
   $ ls -l | awk '{print $1 " " $3 " " $5  " " $9}'
   $ draft lsl
   $ unset -f lsl
-  $ lsl  # displays -bash: lsl: command not found
+  $ lsl  # displays: -bash: lsl: command not found
   $ source ~/.composure/lsl.sh
   $ lsl  # joy!
 ```
