@@ -48,45 +48,26 @@ source_composure ()
       )
     }
 
-    write ()
+    gitonlyknows ()
     {
-      about prints function declaration to stdout
-      param name of function or functions, separated by spaces
-      example $ write myfunction
-      example $ write func1 func2 func3 > ~/funcs.sh
-      local func
-      for func in $*
-      do
-          # sed-fu: trim trailing semicolons from declare -f,
-          # but leave double-semi's (ie case blocks) intact
-          declare -f $func | sed  "s/;;$/;;;/;s/^\(.*\);$/\1/"
-          echo
-      done
-    }
+        about store function in .composure git repository
+        param 1: name of function
+        param 2: operation label
+        example $ gitonlyknows myfunc 'scooby-doo version'
+        example stores your function changes with:
+        example master 7a7e524 scooby-doo version myfunc
+        local func=$1
+        local operation="$2"
 
-    revise ()
-    {
-        about loads function into editor for revision
-        param name of function or functions, separated by spaces
-        example $ revise myfunction
-        example $ revise func1 func2 func3
-
-        local temp=$(mktemp /tmp/revise.XXXX)
-
-        write $* > $temp
-        $EDITOR $temp
-        eval "$(cat $temp)"
-
-        for func in $*
-        do
+        if git --version 2>&1 >/dev/null
+        then
             write $func > ~/.composure/$func.sh
-        done
-        (
-            cd ~/.composure
-            git add --all .
-            git commit -m "revise $*"
-        )
-        rm $temp
+            (
+                cd ~/.composure
+                git add --all .
+                git commit -m "$operation $func"
+            )
+        fi
     }
 
     metafor ()
@@ -160,6 +141,48 @@ source_composure ()
         unset help printline
     }
 
+    revise ()
+    {
+        about loads function into editor for revision
+        param name of function or functions, separated by spaces
+        example $ revise myfunction
+        example $ revise func1 func2 func3
+
+        local temp=$(mktemp /tmp/revise.XXXX)
+
+        write $* > $temp
+        $EDITOR $temp
+        eval "$(cat $temp)"
+
+        for func in $*
+        do
+            write $func > ~/.composure/$func.sh
+        done
+        (
+            cd ~/.composure
+            git add --all .
+            git commit -m "revise $*"
+        )
+        rm $temp
+    }
+
+    write ()
+    {
+      about prints function declaration to stdout
+      param name of function or functions, separated by spaces
+      example $ write myfunction
+      example $ write func1 func2 func3 > ~/funcs.sh
+      local func
+      for func in $*
+      do
+          # sed-fu: trim trailing semicolons from declare -f,
+          # but leave double-semi's (ie case blocks) intact
+          declare -f $func | sed  "s/;;$/;;;/;s/^\(.*\);$/\1/"
+          echo
+      done
+    }
+
+
 }
 
 install_composure ()
@@ -194,6 +217,23 @@ install_composure ()
     then
       echo 'sourcing composure from .bashrc...'
       echo "source $DIR/$(basename $0)" >> ~/.bashrc
+    fi
+
+    # prepare git repo
+    if git --version 2>&1 >/dev/null
+    then
+        if [ ! -d ~/.composure ]
+        then
+            (
+                echo 'creating git repository for your functions...'
+                mkdir ~/.composure
+                cd ~/.composure
+                git init
+                echo "composure stores your function definitions here" > README.txt
+                git add README.txt
+                git commit -m 'initial commit'
+            )
+        fi
     fi
 
     echo 'composure installed.'
