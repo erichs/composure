@@ -1,26 +1,67 @@
-# Composure: don't fear the Unix chainsaw
+
+     e88~~\  e88~-_  888-~88e-~88e 888-~88e   e88~-_   d88~\ 888  888 888-~\  e88~~8e
+    d888    d888   i 888  888  888 888  888b d888   i C888   888  888 888    d888  88b
+    8888    8888   | 888  888  888 888  8888 8888   |  Y88b  888  888 888    8888__888
+    Y888    Y888   ' 888  888  888 888  888P Y888   '   888D 888  888 888    Y888    ,
+     "88__/  "88_-~  888  888  888 888-_88"   "88_-~  \_88P  "88_-888 888     "88___/
+                                   888
+
+    # Composure: don't fear the Unix chainsaw
 
 Based on ideas from Gary Bernhardt's hilarious talk [The Unix
 Chainsaw](http://www.confreaks.com/videos/615-cascadiaruby2011-the-unix-chainsaw).
 
 This light-hearted shell script aims to make programming the shell easier and
-more intuitive.
+more intuitive:
 
-* Grow shell functions organically from your command line history
-* Intuitive help system with arbitrary shell metadata
+* Transition organically from command, to function, to script
+* Use an unobtrusive help system with arbitrary shell metadata
 * Automatically version and store your shell functions with Git
 
-## Seriously, what?
+## Craft - Draft - Revise
 
-Check out composure in action. In the asciicast below, we'll:
+### Crafting the command line
 
- * group some functions by attaching metadata
- * compose a function to find those grouped functions
- * compose a function that displays the group api documentation
+[REPL environments](http://repl.it) are great for trying out programming ideas
+and crafting snippets of working code, aren't they? Let's strive to make better
+use of the REPL environment constantly at our fingertips: the shell.
 
-Here's the asciicast: [Composure Demo](http://ascii.io/a/435) (7 minutes)
+By default, most Bash shells support the command 'Ctrl-x,Ctrl-e' which opens
+the current command at the prompt in your favorite editor (set the EDITOR
+shell variable). I find that awkward to type, so composure also binds this to
+'Ctrl-j'. Use the full power of your favorite text editor to edit your complex
+commands.
 
-## Arbitrary metadata in your shell functions!
+A few references I find helpful:
+
+ * [vi editing mode cheat sheet](http://www.catonmat.net/download/bash-vi-editing-mode-cheat-sheet.txt)
+ * [Bash Readline bindings](http://www.delorie.com/gnu/docs/bash/bashref_103.html)
+
+### Draft first, ask questions later
+
+Once you've crafted your gem of a command, don't throw it away! Use 'draft ()'
+and give it a good name. This stores your long command as a function you can
+reuse later. Think of it like a rough draft.
+
+Names matter: they communicate intent and function, and good names make our code
+easier to read. Yet often one of the hardest part of programming is finding the
+right name for a variable, function, or class. As Fowler likes to say, ["If it
+hurts, do it more often."](http://martinfowler.com/bliki/FrequencyReducesDifficulty.html)
+
+Practice naming even your 'throw-away' shell code: it just might make you a
+better programmer.
+
+### Revise, revise, revise!
+
+Now that you've got a minimal shell function, you may want to make it better
+through refactoring and revision. Use the 'revise ()' command to revise your
+shell function in your favorite editor.
+
+ * generalize functions with input parameters
+ * add or remove functionality
+ * add supporting metadata for documentation
+
+## Arbitrary shell metadata!
 
 Composure uses a simple system of dynamic keywords that allow you to add
 metadata to your functions. Just call 'cite ()' to initialize your new
@@ -43,7 +84,7 @@ Retrieve your metadata later by calling 'metafor ()':
 
 By default, composure knows the keywords: about, param, and example.
 
-The default keywords are used by the help system:
+These default keywords are used by the help system:
 
 ## Intuitive help system
 
@@ -65,13 +106,20 @@ display apidoc-style help for that function.
 and
 
 ```bash
-  $ reference cite  # displays:
-  cite                creates a new meta keyword for use in your functions
+  $ reference gitonlyknows  # displays:
+  gitonlyknows        store function in ~/.composure git repository
+  parameters:
+                      1: name of function
+                      2: commit label
+  examples:
+                      $ gitonlyknows myfunc 'scooby-doo version'
+                      stores your function changes with:
+                      master 7a7e524 scooby-doo version myfunc
 ```
 
 ## Git integration
 
-If you already have git installed, composure will initialize a ~/.composure
+If you already use git, installing composure will initialize a ~/.composure
 repository, and store and version your functions there. Just use 'draft ()' and
 'revise ()', they automatically version for you.
 
@@ -81,9 +129,8 @@ Why do this?
 
  * the latest version of any function you've composed may always be sourced from
    your ~/.composure repo
- * there's no such thing as throw-away code. Keep your one-off functions in
-   your composure 'junk drawer', and grep through it later for long-forgotten
-   gems
+ * never throw away code--keep your one-off functions in your composure 'junk
+   drawer', and grep through it later for long-forgotten gems
  * every version of every function you write is always
    available to you via basic git commands
 
@@ -108,6 +155,16 @@ try:
  * revise         : loads function into editor for revision
  * write          : prints function declaration to stdout
  * Ctrl-j         : 'jump' from prompt into $EDITOR
+
+## Show me:
+
+Check out composure in action. In the asciicast below, we'll:
+
+ * group some functions by attaching metadata
+ * compose a function to find those grouped functions
+ * compose a function that displays the group api documentation
+
+Here's the asciicast: [Composure Demo](http://ascii.io/a/435) (7 minutes)
 
 ## Installing
 
