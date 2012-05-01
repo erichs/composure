@@ -56,12 +56,18 @@ source_composure ()
 
         if git --version >/dev/null 2>&1
         then
-            write $func > ~/.composure/$func.sh
-            (
-                cd ~/.composure
-                git add --all .
-                git commit -m "$operation $func"
-            )
+            if [ -d ~/.composure ]
+            then
+                (
+                    cd ~/.composure
+                    if git rev-parse 2>/dev/null
+                    then
+                        write $func > ~/.composure/$func.sh
+                        git add --all .
+                        git commit -m "$operation $func"
+                    fi
+                )
+            fi
         fi
     }
 
