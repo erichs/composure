@@ -88,7 +88,7 @@ source_composure ()
         param 2: meta keyword
         example $ metafor reference example
         local func=$1 keyword=$2
-        declare -f $func | sed -n "s/^ *$keyword \([^([].*\)$/\1/p"
+        declare -f $func | sed -n "s/;$//;s/^ *$keyword \([^([].*\)*$/\1/p"
     }
 
     reference ()
