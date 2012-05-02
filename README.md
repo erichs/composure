@@ -1,4 +1,3 @@
-
      e88~~\  e88~-_  888-~88e-~88e 888-~88e   e88~-_   d88~\ 888  888 888-~\  e88~~8e
     d888    d888   i 888  888  888 888  888b d888   i C888   888  888 888    d888  88b
     8888    8888   | 888  888  888 888  8888 8888   |  Y88b  888  888 888    8888__888
@@ -90,7 +89,7 @@ display apidoc-style help for that function.
   metafor             prints function metadata associated with keyword
   reference           displays help summary for all functions, or help for specific function
   revise              loads function into editor for revision
-  transcribe        store function in ~/.composure git repository
+  transcribe          store function in ~/.composure git repository
 ```
 
 and
