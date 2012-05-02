@@ -143,7 +143,7 @@ try:
  * metafor        : prints function metadata associated with keyword
  * reference      : displays summary of all functions, or help for specific function
  * revise         : loads function into editor for revision
- * transcribe   : store and version a function in your ~/.composure repo
+ * transcribe     : store and version a function in your ~/.composure repo
  * Ctrl-j         : 'jump' from prompt into $EDITOR
 
 ## Installing
