@@ -7,9 +7,6 @@
 
     # Composure: don't fear the Unix chainsaw
 
-Based on ideas from Gary Bernhardt's hilarious talk [The Unix
-Chainsaw](http://www.confreaks.com/videos/615-cascadiaruby2011-the-unix-chainsaw).
-
 This light-hearted shell script makes programming the shell easier and
 more intuitive:
 
@@ -159,3 +156,14 @@ Try:
     $ chmod +x composure.sh
     $ ./composure.sh
 ```
+
+## Credits
+
+Composure grew out of ideas taken from from Gary Bernhardt's hilarious talk [The Unix
+Chainsaw](http://www.confreaks.com/videos/615-cascadiaruby2011-the-unix-chainsaw) (31 minutes),
+which refers to the Elements of Programming famously described in MIT's [SICP
+text](http://mitpress.mit.edu/sicp/full-text/book/book.html):
+
+ * primitive expressions
+ * means of combination
+ * means of abstraction
