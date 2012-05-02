@@ -40,19 +40,24 @@ source_composure ()
         example $ list
         local func=$1
         eval 'function ' $func ' { ' $(fc -ln -1) '; }'
-        gitonlyknows $func draft
+        local file=$(mktemp /tmp/draft.XXXX)
+        declare -f $func > $file
+        gitonlyknows $func $file draft
+        rm $file 2>/dev/null
     }
 
     gitonlyknows ()
     {
         about store function in ~/.composure git repository
-        param 1: name of function
-        param 2: operation label
-        example $ gitonlyknows myfunc 'scooby-doo version'
+        param 1: function name
+        param 2: file containing function
+        param 3: operation label
+        example $ gitonlyknows myfunc /tmp/myfunc.sh 'scooby-doo version'
         example stores your function changes with:
         example master 7a7e524 scooby-doo version myfunc
         local func=$1
-        local operation="$2"
+        local file=$2
+        local operation="$3"
 
         if git --version >/dev/null 2>&1
         then
@@ -62,7 +67,12 @@ source_composure ()
                     cd ~/.composure
                     if git rev-parse 2>/dev/null
                     then
-                        write $func > ~/.composure/$func.sh
+                        if [ ! -f $file ]
+                        then
+                            echo "Oops! Couldn't find $file to version it for you..."
+                            return
+                        fi
+                        cp $file ~/.composure/$func.sh
                         git add --all .
                         git commit -m "$operation $func"
                     fi
@@ -78,7 +88,7 @@ source_composure ()
         param 2: meta keyword
         example $ metafor reference example
         local func=$1 keyword=$2
-        write $func | sed -n "s/^ *$keyword \([^([].*\)$/\1/p"
+        declare -f $func | sed -n "s/^ *$keyword \([^([].*\)$/\1/p"
     }
 
     reference ()
@@ -143,39 +153,26 @@ source_composure ()
     revise ()
     {
         about loads function into editor for revision
-        param name of function or functions, separated by spaces
+        param 1: name of function
         example $ revise myfunction
-        example $ revise func1 func2 func3
 
+        local func=$1
         local temp=$(mktemp /tmp/revise.XXXX)
 
-        write $* > $temp
+        # populate tempfile...
+        if [ -f ~/.composure/$func.sh ]; then
+            # ...with contents of latest git revision...
+            cat ~/.composure/$func.sh >> $temp
+        else
+            # ...or from ENV if not previously versioned
+            declare -f $func >> $temp
+        fi
         $EDITOR $temp
-        eval "$(cat $temp)"
+        source $temp
 
-        for func in $*
-        do
-            gitonlyknows $func revise
-        done
+        gitonlyknows $func $temp revise
         rm $temp
     }
-
-    write ()
-    {
-      about prints function declaration to stdout
-      param name of function or functions, separated by spaces
-      example $ write myfunction
-      example $ write func1 func2 func3 > ~/funcs.sh
-      local func
-      for func in $*
-      do
-          # sed-fu: trim trailing semicolons from declare -f,
-          # but leave double-semi's (ie case blocks) intact
-          declare -f $func | sed  "s/;;$/;;;/;s/^\(.*\);$/\1/"
-          echo
-      done
-    }
-
 
 }
 
