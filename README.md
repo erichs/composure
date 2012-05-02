@@ -69,22 +69,25 @@ Retrieve your metadata later by calling 'metafor ()':
   metafor foo about  # displays: 'perform mad script-foo'
 ```
 
-By default, composure knows the keywords: about, param, and example.
+By default, composure knows the keywords: about, param, group, author, and example.
 
 These default keywords are used by the help system:
 
 ## Intuitive help system
 
-The 'reference ()' function will automatically summarize all functions with
-'about' metadata. If called with a function name as a parameter, it will
-display apidoc-style help for that function.
+The 'glossary ()' function will automatically summarize all functions with
+'about' metadata. If called with a 'group' name as a parameter, it will
+summarize functions belonging to that group.
+
+To display apidoc-style help for a function, use 'reference ()'.
 
 ```bash
-  $ reference   # displays:
+  $ glossary   # displays:
   cite                creates a new meta keyword for use in your functions
   draft               wraps last command into a new function
+  glossary            displays help summary for all functions, or summary for a group of functions
   metafor             prints function metadata associated with keyword
-  reference           displays help summary for all functions, or help for specific function
+  reference           displays apidoc help for a specific function
   revise              loads function into editor for revision
   transcribe          store function in ~/.composure git repository
 ```
@@ -134,13 +137,14 @@ try:
 
 ## What's included:
 
- * cite           : creates a new meta keyword for use in your functions
- * draft          : wraps last command into a new function
- * metafor        : prints function metadata associated with keyword
- * reference      : displays summary of all functions, or help for specific function
- * revise         : loads function into editor for revision
- * transcribe     : store and version a function in your ~/.composure repo
- * Ctrl-j         : 'jump' from prompt into $EDITOR
+     cite                creates a new meta keyword for use in your functions
+     draft               wraps last command into a new function
+     glossary            displays help summary for all functions, or summary for a group of functions
+     metafor             prints function metadata associated with keyword
+     reference           displays apidoc help for a specific function
+     revise              loads function into editor for revision
+     transcribe          store function in ~/.composure git repository
+     Ctrl-j              'jump' from prompt into $EDITOR
 
 ## Installing
 
@@ -167,3 +171,7 @@ text](http://mitpress.mit.edu/sicp/full-text/book/book.html):
  * primitive expressions
  * means of combination
  * means of abstraction
+
+## TODOs
+
+ * ensure full POSIX compatibility (I welcome your pull requests)
