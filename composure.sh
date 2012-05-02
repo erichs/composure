@@ -42,17 +42,17 @@ source_composure ()
         eval 'function ' $func ' { ' $(fc -ln -1) '; }'
         local file=$(mktemp /tmp/draft.XXXX)
         declare -f $func > $file
-        gitonlyknows $func $file draft
+        transcribe $func $file draft
         rm $file 2>/dev/null
     }
 
-    gitonlyknows ()
+    transcribe ()
     {
         about store function in ~/.composure git repository
         param 1: function name
         param 2: file containing function
         param 3: operation label
-        example $ gitonlyknows myfunc /tmp/myfunc.sh 'scooby-doo version'
+        example $ transcribe myfunc /tmp/myfunc.sh 'scooby-doo version'
         example stores your function changes with:
         example master 7a7e524 scooby-doo version myfunc
         local func=$1
@@ -170,7 +170,7 @@ source_composure ()
         $EDITOR $temp
         source $temp
 
-        gitonlyknows $func $temp revise
+        transcribe $func $temp revise
         rm $temp
     }
 
