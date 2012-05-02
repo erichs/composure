@@ -10,7 +10,7 @@
 Based on ideas from Gary Bernhardt's hilarious talk [The Unix
 Chainsaw](http://www.confreaks.com/videos/615-cascadiaruby2011-the-unix-chainsaw).
 
-This light-hearted shell script aims to make programming the shell easier and
+This light-hearted shell script makes programming the shell easier and
 more intuitive:
 
 * Transition organically from command, to function, to script
@@ -155,7 +155,7 @@ Try:
 
 ```bash
     $ cd ~/some/path
-    $ curl http://git.io/composure > composure.sh
+    $ curl -L http://git.io/composure > composure.sh
     $ chmod +x composure.sh
     $ ./composure.sh
 ```

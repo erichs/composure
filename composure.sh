@@ -1,9 +1,8 @@
 #!/bin/bash
 # Composure - don't fear the UNIX chainsaw...
+#             these light-hearted shell functions make programming the shell
+#             easier and more intuitive
 # by erichs, 2012
-
-# these are a set of light-hearted shell functions that aim to make
-# programming the shell easier and more intuitive
 
 # latest source available at http://git.io/composure
 
