@@ -23,14 +23,13 @@ more intuitive:
 ### Crafting the command line
 
 [REPL environments](http://repl.it) are great for trying out programming ideas
-and crafting snippets of working code, aren't they? Let's strive to make better
-use of the REPL environment constantly at our fingertips: the shell.
+and crafting snippets of working code, aren't they? Composure helps you make
+better use of the REPL environment constantly at your fingertips: the shell.
 
 By default, most Bash shells support the command 'Ctrl-x,Ctrl-e' which opens
-the current command at the prompt in your favorite editor (set the EDITOR
-shell variable). I find that awkward to type, so composure also binds this to
-'Ctrl-j'. Use the full power of your favorite text editor to edit your complex
-commands.
+the current command at the prompt in your favorite editor. I find that awkward
+to type, so composure also binds this to 'Ctrl-j'. Use the full power of your
+favorite text editor to quickly edit your complex commands!
 
 A few references I find helpful:
 
@@ -42,14 +41,6 @@ A few references I find helpful:
 Once you've crafted your gem of a command, don't throw it away! Use 'draft ()'
 and give it a good name. This stores your long command as a function you can
 reuse later. Think of it like a rough draft.
-
-Names matter: they communicate intent and function, and good names make our code
-easier to read. Yet often one of the hardest part of programming is finding the
-right name for a variable, function, or class. As Fowler likes to say, ["If it
-hurts, do it more often."](http://martinfowler.com/bliki/FrequencyReducesDifficulty.html)
-
-Practice naming even your 'throw-away' shell code: it just might make you a
-better programmer.
 
 ### Revise, revise, revise!
 
@@ -96,23 +87,23 @@ display apidoc-style help for that function.
   $ reference   # displays:
   cite                creates a new meta keyword for use in your functions
   draft               wraps last command into a new function
-  gitonlyknows        store function in ~/.composure git repository
   metafor             prints function metadata associated with keyword
   reference           displays help summary for all functions, or help for specific function
   revise              loads function into editor for revision
-  write               prints function declaration to stdout
+  transcribe        store function in ~/.composure git repository
 ```
 
 and
 
 ```bash
-  $ reference gitonlyknows  # displays:
-  gitonlyknows        store function in ~/.composure git repository
+  $ reference transcribe  # displays:
+  transcribe        store function in ~/.composure git repository
   parameters:
-                      1: name of function
-                      2: commit label
+                      1: function name
+                      2: file containing function
+                      3: operation label
   examples:
-                      $ gitonlyknows myfunc 'scooby-doo version'
+                      $ transcribe myfunc /tmp/myfunc.sh 'scooby-doo version'
                       stores your function changes with:
                       master 7a7e524 scooby-doo version myfunc
 ```
@@ -123,7 +114,7 @@ If you already use git, installing composure will initialize a ~/.composure
 repository, and store and version your functions there. Just use 'draft ()' and
 'revise ()', they automatically version for you.
 
-Or, you can manually version a function at any time by calling 'gitonlyknows ()'.
+Or, you can manually version a function at any time by calling 'transcribe ()'.
 
 Why do this?
 
@@ -149,22 +140,11 @@ try:
 
  * cite           : creates a new meta keyword for use in your functions
  * draft          : wraps last command into a new function
- * gitonlyknows   : store and version a function in your ~/.composure repo
  * metafor        : prints function metadata associated with keyword
  * reference      : displays summary of all functions, or help for specific function
  * revise         : loads function into editor for revision
- * write          : prints function declaration to stdout
+ * transcribe   : store and version a function in your ~/.composure repo
  * Ctrl-j         : 'jump' from prompt into $EDITOR
-
-## Show me:
-
-Check out composure in action. In the asciicast below, we'll:
-
- * group some functions by attaching metadata
- * compose a function to find those grouped functions
- * compose a function that displays the group api documentation
-
-Here's the asciicast: [Composure Demo](http://ascii.io/a/435) (7 minutes)
 
 ## Installing
 
