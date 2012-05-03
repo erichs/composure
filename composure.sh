@@ -21,7 +21,7 @@ cite ()
     example $ url http://somewhere.com
     group composure
 
-    local keyword=$1
+    typeset keyword=$1
     for keyword in $*; do
         eval "function $keyword { :; }"
     done
@@ -37,10 +37,10 @@ draft ()
     example $ list
     group composure
 
-    local func=$1
+    typeset func=$1
     eval 'function ' $func ' { ' $(fc -ln -1) '; }'
-    local file=$(mktemp /tmp/draft.XXXX)
-    declare -f $func > $file
+    typeset file=$(mktemp /tmp/draft.XXXX)
+    typeset -f $func > $file
     transcribe $func $file draft
     rm $file 2>/dev/null
 }
@@ -53,12 +53,12 @@ glossary ()
     example $ glossary misc
     group composure
 
-    local targetgroup=${1:-}
+    typeset targetgroup=${1:-}
 
     for func in $(listfunctions); do
-        local about="$(metafor $func about)"
+        typeset about="$(metafor $func about)"
         if [ -n "$targetgroup" ]; then
-            local group="$(metafor $func group)"
+            typeset group="$(metafor $func group)"
             if [ "$group" != "$targetgroup" ]; then
                 continue  # skip non-matching groups, if specified
             fi
@@ -69,7 +69,7 @@ glossary ()
 
 letterpress ()
 {
-    local metadata=$1 leftcol=${2:- } rightcol
+    typeset metadata=$1 leftcol=${2:- } rightcol
 
     if [ -z "$metadata" ]; then
         return
@@ -85,15 +85,14 @@ letterpress ()
 listfunctions ()
 {
 
-    local x ans
-    local this=$(for x in $(ps -p $$); do ans=$x; done; echo $ans | sed 's/^-*//')
+    typeset x ans
+    typeset this=$(for x in $(ps -p $$); do ans=$x; done; echo $ans | sed 's/^-*//')
     case "$this" in
-        zsh)
-            typeset +f
-            ;;
-
-        *)
+        bash)
             typeset -F | awk '{print $3}'
+            ;;
+        *)
+            typeset +f | sed 's/()$//'
             ;;
     esac
 }
@@ -105,8 +104,8 @@ metafor ()
     param 2: meta keyword
     example $ metafor glossary example
     group composure
-    local func=$1 keyword=$2
-    declare -f $func | sed -n "s/;$//;s/^[ 	]*$keyword \([^([].*\)*$/\1/p"
+    typeset func=$1 keyword=$2
+    typeset -f $func | sed -n "s/;$//;s/^[ 	]*$keyword \([^([].*\)*$/\1/p"
 }
 
 revise ()
@@ -116,8 +115,8 @@ revise ()
     example $ revise myfunction
     group composure
 
-    local func=$1
-    local temp=$(mktemp /tmp/revise.XXXX)
+    typeset func=$1
+    typeset temp=$(mktemp /tmp/revise.XXXX)
 
     # populate tempfile...
     if [ -f ~/.composure/$func.sh ]; then
@@ -125,12 +124,12 @@ revise ()
         cat ~/.composure/$func.sh >> $temp
     else
         # ...or from ENV if not previously versioned
-        declare -f $func >> $temp
+        typeset -f $func >> $temp
     fi
 
     if [ -z "$EDITOR" ]
     then
-      local EDITOR=vi
+      typeset EDITOR=vi
     fi
 
     $EDITOR $temp
@@ -147,18 +146,18 @@ reference ()
     example $ reference revise
     group composure
 
-    local func=$1
+    typeset func=$1
 
-    local about="$(metafor $func about)"
+    typeset about="$(metafor $func about)"
     letterpress "$about" $func
 
-    local params="$(metafor $func param)"
+    typeset params="$(metafor $func param)"
     if [ -n "$params" ]; then
         echo "parameters:"
         letterpress "$params"
     fi
 
-    local examples="$(metafor $func example)"
+    typeset examples="$(metafor $func example)"
     if [ -n "$examples" ]; then
         echo "examples:"
         letterpress "$examples"
@@ -176,9 +175,9 @@ transcribe ()
     example master 7a7e524 scooby-doo version myfunc
     group composure
 
-    local func=$1
-    local file=$2
-    local operation="$3"
+    typeset func=$1
+    typeset file=$2
+    typeset operation="$3"
 
     if git --version >/dev/null 2>&1; then
         if [ -d ~/.composure ]; then
