@@ -132,7 +132,7 @@ To display apidoc-style help for a function, use 'reference ()'.
   revise              loads function into editor for revision
   transcribe          store function in ~/.composure git repository
 
-  while
+  meanwhile
 
   $ glossary admin   # displays:
   finddown            finds servers marked 'down' in text file
