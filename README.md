@@ -80,8 +80,8 @@ shell function in your favorite editor.
   {
       about finds servers marked 'down' in text file
       group admin
-      typeset file=$1
-      cat $file | grep down
+      typeset txt=$1
+      cat $txt | grep down
   }
 
   $ finddown servers.txt
