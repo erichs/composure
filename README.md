@@ -26,18 +26,18 @@ Many Unix users I know like to iteratively build up complex commands by trying
 something out, hitting the up arrow and perhaps adding a filter with a pipe:
 
 ```bash
-  $ cat servers_down.txt
-  bashful
-  doc
+  $ cat servers.txt
+  bashful: up
+  doc: down
 
   up-arrow
 
-  $ cat servers_down.txt | wc -l
-  2
+  $ cat servers.txt | grep down
+  doc: down
 
   up-arrow
 
-  $ cat servers_down.txt | wc -l | mail -s "number of down servers" admin@here.com
+  $ cat servers.txt | grep down | mail -s "down server(s)" admin@here.com
 ```
 
 Composure helps by letting your quickly draft simple shell functions, breaking down
@@ -50,18 +50,18 @@ and give it a good name. This stores your last command as a function you can
 reuse later. Think of it like a rough draft.
 
 ```bash
-  $ cat servers_down.txt
-  bashful
-  doc
+  $ cat servers.txt
+  bashful: up
+  doc: down
 
   up-arrow
 
-  $ cat servers_down.txt | wc -l
-  2
+  $ cat servers.txt | grep down
+  doc: down
 
-  $ draft down_servers
+  $ draft finddown
 
-  $ down_servers | mail -s "number of down servers" admin@here.com
+  $ finddown | mail -s "down server(s)" admin@here.com
 ```
 
 ### Revise, revise, revise!
@@ -73,6 +73,20 @@ shell function in your favorite editor.
  * generalize functions with input parameters
  * add or remove functionality
  * add supporting metadata for documentation
+
+```bash
+  $ revise finddown
+  finddown ()
+  {
+      about finds servers marked 'down' in text file
+      group admin
+      typeset file=$1
+      cat $file | grep down
+  }
+
+  $ finddown servers.txt
+  doc: down
+```
 
 ## Arbitrary shell metadata!
 
@@ -111,16 +125,20 @@ To display apidoc-style help for a function, use 'reference ()'.
   $ glossary   # displays:
   cite                creates a new meta keyword for use in your functions
   draft               wraps last command into a new function
+  finddown            finds servers marked 'down' in text file
   glossary            displays help summary for all functions, or summary for a group of functions
   metafor             prints function metadata associated with keyword
   reference           displays apidoc help for a specific function
   revise              loads function into editor for revision
   transcribe          store function in ~/.composure git repository
-```
 
-and
+  while
 
-```bash
+  $ glossary admin   # displays:
+  finddown            finds servers marked 'down' in text file
+
+  and
+
   $ reference transcribe  # displays:
   transcribe        store function in ~/.composure git repository
   parameters:
@@ -156,7 +174,7 @@ try:
   $ ls -l | awk '{print $1 " " $3 " " $5  " " $9}'
   $ draft lsl
   $ unset -f lsl
-  $ lsl  # displays: -bash: lsl: command not found
+  $ lsl  # displays: lsl: command not found
   $ source ~/.composure/lsl.sh
   $ lsl  # joy!
 ```
