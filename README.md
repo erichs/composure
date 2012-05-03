@@ -22,21 +22,47 @@ more intuitive:
 and crafting snippets of working code, aren't they? Composure helps you make
 better use of the REPL environment constantly at your fingertips: the shell.
 
-By default, most Bash shells support the command 'Ctrl-x,Ctrl-e' which opens
-the current command at the prompt in your favorite editor. I find that awkward
-to type, so composure also binds this to 'Ctrl-j'. Use the full power of your
-favorite text editor to quickly edit your complex commands!
+Many Unix users I know like to iteratively build up complex commands by trying
+something out, hitting the up arrow and perhaps adding a filter with a pipe:
 
-A few references I find helpful:
+```bash
+  $ cat servers_down.txt
+  bashful
+  doc
 
- * [vi editing mode cheat sheet](http://www.catonmat.net/download/bash-vi-editing-mode-cheat-sheet.txt)
- * [Bash Readline bindings](http://www.delorie.com/gnu/docs/bash/bashref_103.html)
+  up-arrow
+
+  $ cat servers_down.txt | wc -l
+  2
+
+  up-arrow
+
+  $ cat servers_down.txt | wc -l | mail -s "number of down servers" admin@here.com
+```
+
+Composure helps by letting your quickly draft simple shell functions, breaking down
+your long pipe filters and complex commands into readable and reusable chunks.
 
 ### Draft first, ask questions later
 
 Once you've crafted your gem of a command, don't throw it away! Use 'draft ()'
-and give it a good name. This stores your long command as a function you can
+and give it a good name. This stores your last command as a function you can
 reuse later. Think of it like a rough draft.
+
+```bash
+  $ cat servers_down.txt
+  bashful
+  doc
+
+  up-arrow
+
+  $ cat servers_down.txt | wc -l
+  2
+
+  $ draft down_servers
+
+  $ down_servers | mail -s "number of down servers" admin@here.com
+```
 
 ### Revise, revise, revise!
 
@@ -148,18 +174,44 @@ try:
 
 ## Installing
 
-I like to keep configuration source files in my ~/conf directory. You'll likely
-have a different preference. That's okay, just put composure.sh where you'd
-like it to live and execute it. It will install itself automatically.
+Put composure.sh where you'd like it to live and source it from your
+shell's profile or rc file.
 
-Try:
+On Bash:
 
 ```bash
-    $ cd ~/some/path
-    $ curl -L http://git.io/composure > composure.sh
-    $ chmod +x composure.sh
-    $ ./composure.sh
+    $ cd /where/you/put/composure.sh
+    $ echo "source $(pwd)/composure.sh" >> ~/.bashrc   # or, ~/.bash_profile on osx
 ```
+
+# Compatibility
+
+Composure should be POSIX-compatible, and is known to work on ksh93, zsh, and
+bash, on osx and linux.
+
+Please feel free to open an issue if you have any difficulties on your system.
+
+## Additional Resources
+
+By default, most Bash shells support the command 'Ctrl-x,Ctrl-e' which opens
+the current command at the prompt in your favorite editor. I find that awkward
+to type, so I binds this to 'Ctrl-j'. Use the full power of your
+favorite text editor to quickly edit your complex commands!
+
+In bash, try adding the following to your ~/.bashrc or ~/.bash_profile:
+
+```bash
+  bind '"\C-j": edit-and-execute-command'
+```
+
+A few references I find helpful:
+
+ * [vi editing mode cheat sheet](http://www.catonmat.net/download/bash-vi-editing-mode-cheat-sheet.txt)
+ * [Bash Readline bindings](http://www.delorie.com/gnu/docs/bash/bashref_103.html)
+
+## Known Issues
+
+'glossary ()' and 'reference ()' do not support nested functions with metadata.
 
 ## Credits
 
@@ -171,7 +223,3 @@ text](http://mitpress.mit.edu/sicp/full-text/book/book.html):
  * primitive expressions
  * means of combination
  * means of abstraction
-
-## TODOs
-
- * ensure full POSIX compatibility (I welcome your pull requests)
