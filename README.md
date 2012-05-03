@@ -165,7 +165,7 @@ Try:
 
 Composure grew out of ideas taken from from Gary Bernhardt's hilarious talk [The Unix
 Chainsaw](http://www.confreaks.com/videos/615-cascadiaruby2011-the-unix-chainsaw) (31 minutes),
-which refers to the Elements of Programming famously described in MIT's [SICP
+which refers to the Elements of Programming described in MIT's [SICP
 text](http://mitpress.mit.edu/sicp/full-text/book/book.html):
 
  * primitive expressions
