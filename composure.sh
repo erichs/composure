@@ -168,9 +168,9 @@ revise ()
     typeset temp=$(mktemp /tmp/revise.XXXX)
 
     # populate tempfile...
-    if [ -f ~/.composure/$func.sh ]; then
+    if [ -f ~/.composure/$func.inc ]; then
         # ...with contents of latest git revision...
-        cat ~/.composure/$func.sh >> $temp
+        cat ~/.composure/$func.inc >> $temp
     else
         # ...or from ENV if not previously versioned
         typeset -f $func >> $temp
@@ -203,7 +203,7 @@ transcribe ()
                         printf "%s\n" "Oops! Couldn't find $file to version it for you..."
                         return
                     fi
-                    cp $file ~/.composure/$func.sh
+                    cp $file ~/.composure/$func.inc
                     git add --all .
                     git commit -m "$operation $func"
                 fi
