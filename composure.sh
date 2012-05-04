@@ -132,6 +132,31 @@ metafor ()
     typeset -f $func | sed -n "s/;$//;s/^[ 	]*$keyword \([^([].*\)*$/\1/p"
 }
 
+reference ()
+{
+    about displays apidoc help for a specific function
+    param 1: function name
+    example $ reference revise
+    group composure
+
+    typeset func=$1
+
+    typeset about="$(metafor $func about)"
+    letterpress "$about" $func
+
+    typeset params="$(metafor $func param)"
+    if [ -n "$params" ]; then
+        printf "parameters:\n"
+        letterpress "$params"
+    fi
+
+    typeset examples="$(metafor $func example)"
+    if [ -n "$examples" ]; then
+        printf "examples:\n"
+        letterpress "$examples"
+    fi
+}
+
 revise ()
 {
     about loads function into editor for revision
@@ -163,43 +188,8 @@ revise ()
     rm $temp
 }
 
-reference ()
-{
-    about displays apidoc help for a specific function
-    param 1: function name
-    example $ reference revise
-    group composure
-
-    typeset func=$1
-
-    typeset about="$(metafor $func about)"
-    letterpress "$about" $func
-
-    typeset params="$(metafor $func param)"
-    if [ -n "$params" ]; then
-        printf "parameters:\n"
-        letterpress "$params"
-    fi
-
-    typeset examples="$(metafor $func example)"
-    if [ -n "$examples" ]; then
-        printf "examples:\n"
-        letterpress "$examples"
-    fi
-}
-
 transcribe ()
 {
-    # TODO: consider making this 'private', and updating doco
-    about store function in ~/.composure git repository
-    param 1: function name
-    param 2: file containing function
-    param 3: operation label
-    example $ transcribe myfunc /tmp/myfunc.sh 'scooby-doo version'
-    example stores your function changes with:
-    example master 7a7e524 scooby-doo version myfunc
-    group composure
-
     typeset func=$1
     typeset file=$2
     typeset operation="$3"
@@ -219,9 +209,40 @@ transcribe ()
                 fi
             )
         else
-            # TODO: add repo creation logic
-            printf "%s\n" "I see you don't have a ~/.composure repo... would you like to create one?"
-        fi
+            if [ "$USE_COMPOSURE_REPO" = "0" ]; then
+                return  # if you say so...
+            fi
+            printf "%s\n" "I see you don't have a ~/.composure repo..."
+            typeset input
+            typeset valid=0
+            while [ $valid != 1 ]; do
+                printf "\n%s" 'would you like to create one? y/n: '
+                read input
+                case $input in
+                    y|yes|Y|Yes|YES)
+                        (
+                            echo 'creating git repository for your functions...'
+                            mkdir ~/.composure
+                            cd ~/.composure
+                            git init
+                            echo "composure stores your function definitions here" > README.txt
+                            git add README.txt
+                            git commit -m 'initial commit'
+                        )
+                        # if at first you don't succeed...
+                        transcribe "$func" "$file" "$operation"
+                        valid=1
+                        ;;
+                    n|no|N|No|NO)
+                        printf "%s\n" "ok. add 'export USE_COMPOSURE_REPO=0' to your startup script to disable this message."
+                        valid=1
+                    ;;
+                    *)
+                        printf "%s\n" "sorry, didn't get that..."
+                    ;;
+                esac
+            done
+       fi
     fi
 }
 
