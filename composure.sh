@@ -1,10 +1,10 @@
-#!/bin/bash
-# Composure - don't fear the UNIX chainsaw...
-#             these light-hearted shell functions make programming the shell
-#             easier and more intuitive
-# by erichs, 2012
+# composure - by erichs
+# light-hearted shell functions for intuitive shell programming
+
+# install: source this script in your ~/.profile or ~/.${SHELL}rc script
 
 # latest source available at http://git.io/composure
+# known to work on bash, zsh, and ksh93
 
 # define default metadata keywords:
 about ()   { :; }
@@ -21,12 +21,24 @@ cite ()
     example $ url http://somewhere.com
     group composure
 
-    typeset keyword=$1
+    # this is the storage half of the 'metadata' system:
+    # we create dynamic metadata keywords with function wrappers around
+    # the NOP command, ':'
+
+    # anything following a keyword will get parsed as a positional
+    # parameter, but stay resident in the ENV. As opposed to shell
+    # comments, '#', which do not get parsed, thus are not available
+    # at runtime.
+
+    # a BIG caveat--your metadata must be roughly parsable: do not use
+    # contractions, and consider single or double quoting if it contains
+    # non-alphanumeric characters
+
+    typeset keyword
     for keyword in $*; do
         eval "function $keyword { :; }"
     done
 }
-
 
 draft ()
 {
@@ -84,15 +96,22 @@ letterpress ()
 
 listfunctions ()
 {
+    # unfortunately, there does not seem to be a easy, portable way to list just the
+    # names of the defined shell functions...
+
+    # here's a hack I modified from a StackOverflow post:
+    # we loop over the ps listing for the current process ($$), and print the last column (CMD)
+    # stripping any leading hyphens bash sometimes throws in there
 
     typeset x ans
-    typeset this=$(for x in $(ps -p $$); do ans=$x; done; echo $ans | sed 's/^-*//')
+    typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" $ans | sed 's/^-*//')
     case "$this" in
         bash)
             typeset -F | awk '{print $3}'
             ;;
         *)
-            typeset +f | sed 's/()$//'
+            # trim everything following '()' in ksh
+            typeset +f | sed 's/().*$//'
             ;;
     esac
 }
@@ -105,6 +124,11 @@ metafor ()
     example $ metafor glossary example
     group composure
     typeset func=$1 keyword=$2
+
+    # this sed-fu is the retrieval half of the 'metadata' system:
+    # first 'cat' the function definition,
+    # then 'grep' for the metadata keyword, and
+    # then parse and massage the matching line
     typeset -f $func | sed -n "s/;$//;s/^[ 	]*$keyword \([^([].*\)*$/\1/p"
 }
 
@@ -153,19 +177,20 @@ reference ()
 
     typeset params="$(metafor $func param)"
     if [ -n "$params" ]; then
-        echo "parameters:"
+        printf "parameters:\n"
         letterpress "$params"
     fi
 
     typeset examples="$(metafor $func example)"
     if [ -n "$examples" ]; then
-        echo "examples:"
+        printf "examples:\n"
         letterpress "$examples"
     fi
 }
 
 transcribe ()
 {
+    # TODO: consider making this 'private', and updating doco
     about store function in ~/.composure git repository
     param 1: function name
     param 2: file containing function
@@ -185,7 +210,7 @@ transcribe ()
                 cd ~/.composure
                 if git rev-parse 2>/dev/null; then
                     if [ ! -f $file ]; then
-                        echo "Oops! Couldn't find $file to version it for you..."
+                        printf "%s\n" "Oops! Couldn't find $file to version it for you..."
                         return
                     fi
                     cp $file ~/.composure/$func.sh
@@ -193,6 +218,9 @@ transcribe ()
                     git commit -m "$operation $func"
                 fi
             )
+        else
+            # TODO: add repo creation logic
+            printf "%s\n" "I see you don't have a ~/.composure repo... would you like to create one?"
         fi
     fi
 }
