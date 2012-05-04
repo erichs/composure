@@ -171,7 +171,7 @@ try:
   $ draft lsl
   $ unset -f lsl  # or, open a new terminal...
   $ lsl  # displays: lsl: command not found
-  $ source ~/.composure/lsl.sh
+  $ source ~/.composure/lsl.inc
   $ lsl  # joy!
 ```
 
