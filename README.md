@@ -203,12 +203,13 @@ Please feel free to open an issue if you have any difficulties on your system.
 
 By default, most Bash shells support the command 'Ctrl-x,Ctrl-e' which opens
 the current command at the prompt in your favorite editor. I find that awkward
-to type, so I binds this to 'Ctrl-j'. Use the full power of your
+to type, so I bind this to 'Ctrl-j'. Use the full power of your
 favorite text editor to quickly edit your complex commands!
 
 In bash, try adding the following to your ~/.bashrc or ~/.bash_profile:
 
 ```bash
+  # 'jump' from prompt into EDITOR...
   bind '"\C-j": edit-and-execute-command'
 ```
 
