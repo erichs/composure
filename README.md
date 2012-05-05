@@ -17,9 +17,7 @@ more intuitive:
 
 ## Demo!
 
-(5 minutes)
-
-<iframe frameborder="0" height="740" src="http://ascii.io/a/469" width="640"></iframe>
+[Composing a simple network monitoring script](http://ascii.io/a/469) (5 minutes)
 
 ## Craft - Draft - Revise
 
