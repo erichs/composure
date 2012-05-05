@@ -105,7 +105,8 @@ listfunctions ()
 
     typeset x ans
     typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" $ans | sed 's/^-*//')
-    case "$this" in
+    typeset shell=$(basename $this)
+    case "$shell" in
         bash)
             typeset -F | awk '{print $3}'
             ;;

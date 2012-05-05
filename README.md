@@ -14,6 +14,13 @@ more intuitive:
 * Use an unobtrusive help system with arbitrary shell metadata
 * Automatically version and store your shell functions with Git
 
+
+## Demo!
+
+(5 minutes)
+
+<iframe frameborder="0" height="740" src="http://ascii.io/a/469" width="640"></iframe>
+
 ## Craft - Draft - Revise
 
 ### Crafting the command line
