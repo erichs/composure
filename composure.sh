@@ -36,21 +36,30 @@ cite ()
 
     typeset keyword
     for keyword in $*; do
-        eval "function $keyword { :; }"
+        eval "$keyword() { :; }"
     done
 }
 
 draft ()
 {
-    about wraps last command into a new function
+    about wraps command from history into a new function, default is last command
     param 1: name to give function
+    param 2: optional history line number
     example $ ls
     example $ draft list
-    example $ list
+    example $ draft newfunc 1120  '# wraps command at history line 1120 in newfunc()'
     group composure
 
     typeset func=$1
-    eval 'function ' $func ' { ' $(fc -ln -1) '; }'
+    typeset num=$2
+    typeset cmd
+    if [ -z "$num" ]; then
+        cmd=$(fc -ln -1 | head -1 | sed 's/^[[:blank:]]*//')
+    else
+        # parse command from history line number
+        cmd=$(eval "history | grep '^[[:blank:]]*$num' | head -1" | sed 's/^[[:blank:][:digit:]]*//')
+    fi
+    eval "$func() { $cmd; }"
     typeset file=$(mktemp /tmp/draft.XXXX)
     typeset -f $func > $file
     transcribe $func $file draft
