@@ -17,7 +17,7 @@ more intuitive:
 
 ## Demo!
 
-[Composing a simple network monitoring script](http://ascii.io/a/469) (5 minutes)
+[Composing a simple network monitoring script](http://ascii.io/a/472) (3 minutes)
 
 ## Craft - Draft - Revise
 
