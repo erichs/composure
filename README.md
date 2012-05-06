@@ -7,13 +7,12 @@
 
     # Composure: don't fear the Unix chainsaw
 
-This light-hearted shell script makes programming the shell easier and
+These light-hearted functions make programming the shell easier and
 more intuitive:
 
 * Transition organically from command, to function, to script
 * Use an unobtrusive help system with arbitrary shell metadata
 * Automatically version and store your shell functions with Git
-
 
 ## Demo!
 
