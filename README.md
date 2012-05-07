@@ -18,7 +18,7 @@ more intuitive:
 
 [Composing a simple network monitoring script](http://ascii.io/a/472) (3 minutes)
 
-## Craft - Draft - Revise
+## Craft - Draft - Revise - Write
 
 ### Crafting the command line
 
@@ -91,6 +91,16 @@ shell function in your favorite editor.
   doc: down
 ```
 
+### Write!
+
+When it is time to put your function or functions to use in a shell script, just call write:
+
+```bash
+  $ write finddown > finddown.sh
+```
+
+Add a shebang line, and you're ready to go!
+
 ## Arbitrary shell metadata!
 
 Composure uses a simple system of dynamic keywords that allow you to add
@@ -135,6 +145,7 @@ To display apidoc-style help for a function, use 'reference ()'.
   metafor             prints function metadata associated with keyword
   reference           displays apidoc help for a specific function
   revise              loads function into editor for revision
+  write               writes one or more composed function definitions to stdout
 
   meanwhile
 
