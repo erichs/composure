@@ -20,6 +20,8 @@ more intuitive:
 
 ## Craft - Draft - Revise - Write
 
+<img src="http://yuml.me/bd1c8892"/>
+
 ### Crafting the command line
 
 [REPL environments](http://repl.it) are great for trying out programming ideas
