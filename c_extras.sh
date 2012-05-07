@@ -7,7 +7,7 @@ all_groups ()
 
     typeset func
     typeset file=$(mktemp /tmp/composure.XXXX)
-    for func in $(listfunctions);
+    for func in $(typeset_functions);
     do
         metafor $func group >> $file
     done
