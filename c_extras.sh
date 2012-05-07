@@ -58,13 +58,3 @@ recompose_all ()
         load $func
     done
 }
-
-write ()
-{
-    about writes function definition to stdout
-    param 1: name of function
-    example $ write myfunc
-    group composure_ext
-
-    typeset -f $1
-}

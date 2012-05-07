@@ -8,27 +8,10 @@
 
 # 'plumbing' functions
 
-metaword () {
-    # this is the storage half of the 'metadata' system:
-    # we create dynamic metadata keywords with function wrappers around
-    # the NOP command, ':'
-
-    # anything following a keyword will get parsed as a positional
-    # parameter, but stay resident in the ENV. As opposed to shell
-    # comments, '#', which do not get parsed and are not available
-    # at runtime.
-
-    # a BIG caveat--your metadata must be roughly parsable: do not use
-    # contractions, and consider single or double quoting if it contains
-    # non-alphanumeric characters
-    typeset keyword
-    for keyword in $*; do
-        eval "$keyword() { :; }"
-    done
+composure_keywords ()
+{
+    echo "about author example group param version"
 }
-
-# define default metadata keywords:
-metaword about author example group param version
 
 letterpress ()
 {
@@ -45,7 +28,7 @@ letterpress ()
     IFS=$OLD
 }
 
-listfunctions ()
+typeset_functions ()
 {
     # unfortunately, there does not seem to be a easy, portable way to list just the
     # names of the defined shell functions...
@@ -69,6 +52,14 @@ listfunctions ()
 }
 
 
+# bootstrap metadata keywords for porcelain functions
+for f in $(composure_keywords)
+do
+    eval "$f() { :; }"
+done
+unset f
+
+
 # 'porcelain' functions
 
 cite ()
@@ -80,7 +71,22 @@ cite ()
     example $ username alice
     group composure
 
-    metaword $*
+    # this is the storage half of the 'metadata' system:
+    # we create dynamic metadata keywords with function wrappers around
+    # the NOP command, ':'
+
+    # anything following a keyword will get parsed as a positional
+    # parameter, but stay resident in the ENV. As opposed to shell
+    # comments, '#', which do not get parsed and are not available
+    # at runtime.
+
+    # a BIG caveat--your metadata must be roughly parsable: do not use
+    # contractions, and consider single or double quoting if it contains
+    # non-alphanumeric characters
+    typeset keyword
+    for keyword in $*; do
+        eval "$keyword() { :; }"
+    done
 }
 
 draft ()
@@ -119,7 +125,7 @@ glossary ()
 
     typeset targetgroup=${1:-}
 
-    for func in $(listfunctions); do
+    for func in $(typeset_functions); do
         typeset about="$(metafor $func about)"
         if [ -n "$targetgroup" ]; then
             typeset group="$(metafor $func group)"
@@ -270,6 +276,17 @@ transcribe ()
             done
        fi
     fi
+}
+
+write ()
+{
+    about writes one or more composed function definitions to stdout
+    param one or more function names
+    example $ write finddown foo
+    example $ write finddown
+    group composure
+
+    typeset -f $(composure_keywords) cite $*
 }
 
 : <<EOF
