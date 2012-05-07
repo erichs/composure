@@ -91,7 +91,7 @@ shell function in your favorite editor.
   doc: down
 ```
 
-### Write!
+### Get it in Writing
 
 When it is time to put your function or functions to use in a shell script, just call write:
 
