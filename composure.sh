@@ -6,8 +6,6 @@
 # latest source available at http://git.io/composure
 # known to work on bash, zsh, and ksh93
 
-COMPOSURE_VERSION=0.5
-
 # 'plumbing' functions
 
 metaword () {
@@ -160,6 +158,16 @@ reference ()
 
     typeset about="$(metafor $func about)"
     letterpress "$about" $func
+
+    typeset author="$(metafor $func author)"
+    if [ -n "$author" ]; then
+        letterpress "$author" 'author:'
+    fi
+
+    typeset version="$(metafor $func version)"
+    if [ -n "$version" ]; then
+        letterpress "$version" 'version:'
+    fi
 
     typeset params="$(metafor $func param)"
     if [ -n "$params" ]; then
