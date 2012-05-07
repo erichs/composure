@@ -6,21 +6,11 @@
 # latest source available at http://git.io/composure
 # known to work on bash, zsh, and ksh93
 
-# define default metadata keywords:
-about ()   { :; }
-group ()   { :; }
-param ()   { :; }
-author ()  { :; }
-example () { :; }
+COMPOSURE_VERSION=0.5
 
-cite ()
-{
-    about creates a new meta keyword for use in your functions
-    param 1: keyword
-    example $ cite url
-    example $ url http://somewhere.com
-    group composure
+# 'plumbing' functions
 
+metaword () {
     # this is the storage half of the 'metadata' system:
     # we create dynamic metadata keywords with function wrappers around
     # the NOP command, ':'
@@ -33,11 +23,66 @@ cite ()
     # a BIG caveat--your metadata must be roughly parsable: do not use
     # contractions, and consider single or double quoting if it contains
     # non-alphanumeric characters
-
     typeset keyword
     for keyword in $*; do
         eval "$keyword() { :; }"
     done
+}
+
+# define default metadata keywords:
+metaword about author example group param version
+
+letterpress ()
+{
+    typeset metadata=$1 leftcol=${2:- } rightcol
+
+    if [ -z "$metadata" ]; then
+        return
+    fi
+
+    OLD=$IFS; IFS=$'\n'
+    for rightcol in $metadata; do
+        printf "%-20s%s\n" $leftcol $rightcol
+    done
+    IFS=$OLD
+}
+
+listfunctions ()
+{
+    # unfortunately, there does not seem to be a easy, portable way to list just the
+    # names of the defined shell functions...
+
+    # here's a hack I modified from a StackOverflow post:
+    # we loop over the ps listing for the current process ($$), and print the last column (CMD)
+    # stripping any leading hyphens bash sometimes throws in there
+
+    typeset x ans
+    typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" $ans | sed 's/^-*//')
+    typeset shell=$(basename $this)  # e.g. /bin/bash => bash
+    case "$shell" in
+        bash)
+            typeset -F | awk '{print $3}'
+            ;;
+        *)
+            # trim everything following '()' in ksh
+            typeset +f | sed 's/().*$//'
+            ;;
+    esac
+}
+
+
+# 'porcelain' functions
+
+cite ()
+{
+    about creates one or more meta keywords for use in your functions
+    param one or more keywords
+    example $ cite url username
+    example $ url http://somewhere.com
+    example $ username alice
+    group composure
+
+    metaword $*
 }
 
 draft ()
@@ -88,44 +133,6 @@ glossary ()
     done
 }
 
-letterpress ()
-{
-    typeset metadata=$1 leftcol=${2:- } rightcol
-
-    if [ -z "$metadata" ]; then
-        return
-    fi
-
-    OLD=$IFS; IFS=$'\n'
-    for rightcol in $metadata; do
-        printf "%-20s%s\n" $leftcol $rightcol
-    done
-    IFS=$OLD
-}
-
-listfunctions ()
-{
-    # unfortunately, there does not seem to be a easy, portable way to list just the
-    # names of the defined shell functions...
-
-    # here's a hack I modified from a StackOverflow post:
-    # we loop over the ps listing for the current process ($$), and print the last column (CMD)
-    # stripping any leading hyphens bash sometimes throws in there
-
-    typeset x ans
-    typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" $ans | sed 's/^-*//')
-    typeset shell=$(basename $this)  # e.g. /bin/bash => bash
-    case "$shell" in
-        bash)
-            typeset -F | awk '{print $3}'
-            ;;
-        *)
-            # trim everything following '()' in ksh
-            typeset +f | sed 's/().*$//'
-            ;;
-    esac
-}
-
 metafor ()
 {
     about prints function metadata associated with keyword
@@ -165,6 +172,7 @@ reference ()
         printf "examples:\n"
         letterpress "$examples"
     fi
+
 }
 
 revise ()
