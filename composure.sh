@@ -87,6 +87,64 @@ transcribe ()
     fi
 }
 
+transcribe ()
+{
+    typeset func=$1
+    typeset file=$2
+    typeset operation="$3"
+
+    if git --version >/dev/null 2>&1; then
+        if [ -d ~/.composure ]; then
+            (
+                cd ~/.composure
+                if git rev-parse 2>/dev/null; then
+                    if [ ! -f $file ]; then
+                        printf "%s\n" "Oops! Couldn't find $file to version it for you..."
+                        return
+                    fi
+                    cp $file ~/.composure/$func.inc
+                    git add --all .
+                    git commit -m "$operation $func"
+                fi
+            )
+        else
+            if [ "$USE_COMPOSURE_REPO" = "0" ]; then
+                return  # if you say so...
+            fi
+            printf "%s\n" "I see you don't have a ~/.composure repo..."
+            typeset input
+            typeset valid=0
+            while [ $valid != 1 ]; do
+                printf "\n%s" 'would you like to create one? y/n: '
+                read input
+                case $input in
+                    y|yes|Y|Yes|YES)
+                        (
+                            echo 'creating git repository for your functions...'
+                            mkdir ~/.composure
+                            cd ~/.composure
+                            git init
+                            echo "composure stores your function definitions here" > README.txt
+                            git add README.txt
+                            git commit -m 'initial commit'
+                        )
+                        # if at first you don't succeed...
+                        transcribe "$func" "$file" "$operation"
+                        valid=1
+                        ;;
+                    n|no|N|No|NO)
+                        printf "%s\n" "ok. add 'export USE_COMPOSURE_REPO=0' to your startup script to disable this message."
+                        valid=1
+                    ;;
+                    *)
+                        printf "%s\n" "sorry, didn't get that..."
+                    ;;
+                esac
+            done
+       fi
+    fi
+}
+
 typeset_functions ()
 {
     # unfortunately, there does not seem to be a easy, portable way to list just the
@@ -142,6 +200,13 @@ cite ()
     # a BIG caveat--your metadata must be roughly parsable: do not use
     # contractions, and consider single or double quoting if it contains
     # non-alphanumeric characters
+
+    if [ -z "$1" ]; then
+        printf '%s\n' 'missing parameter(s)'
+        reference cite
+        return
+    fi
+
     typeset keyword
     for keyword in $*; do
         eval "$keyword() { :; }"
@@ -161,6 +226,13 @@ draft ()
     typeset func=$1
     typeset num=$2
     typeset cmd
+
+    if [ -z "$func" ]; then
+        printf '%s\n' 'missing parameter(s)'
+        reference draft
+        return
+    fi
+
     if [ -z "$num" ]; then
         cmd=$(fc -ln -1 | head -1 | sed 's/^[[:blank:]]*//')
     else
@@ -205,10 +277,18 @@ metafor ()
     group composure
     typeset func=$1 keyword=$2
 
+    if [ -z "$func" ] || [ -z "$keyword" ]; then
+        printf '%s\n' 'missing parameter(s)'
+        reference metafor
+        return
+    fi
+
     # this sed-fu is the retrieval half of the 'metadata' system:
     # first 'cat' the function definition,
     # then 'grep' for the metadata keyword, and
     # then parse and massage the matching line
+
+    # function def   # strip ending ; # ignore keyword  # print remainder  # strip start/end quotes
     typeset -f $func | sed -n "s/;$//;s/^[ 	]*$keyword \([^([].*\)*$/\1/p" | sed "s/^['\"]*//;s/['\"]*$//"
 }
 
@@ -220,6 +300,11 @@ reference ()
     group composure
 
     typeset func=$1
+    if [ -z "$func" ]; then
+        printf '%s\n' 'missing parameter(s)'
+        reference reference
+        return
+    fi
 
     typeset about="$(metafor $func about)"
     letterpress "$about" $func
@@ -258,6 +343,12 @@ revise ()
     typeset func=$1
     typeset temp=$(mktemp /tmp/revise.XXXX)
 
+    if [ -z "$func" ]; then
+        printf '%s\n' 'missing parameter(s)'
+        reference revise
+        return
+    fi
+
     # populate tempfile...
     if [ -f ~/.composure/$func.inc ]; then
         # ...with contents of latest git revision...
@@ -286,6 +377,12 @@ write ()
     example $ write finddown foo
     example $ write finddown
     group composure
+
+    if [ -z "$1" ]; then
+        printf '%s\n' 'missing parameter(s)'
+        reference write
+        return
+    fi
 
     typeset -f $(composure_keywords) cite $*
 }
