@@ -364,7 +364,7 @@ revise ()
     fi
 
     $EDITOR $temp
-    source $temp
+    . $temp  # source edited file
 
     transcribe $func $temp revise
     rm $temp
@@ -384,7 +384,17 @@ write ()
         return
     fi
 
-    typeset -f $(composure_keywords) cite $*
+# bootstrap metadata
+cat <<END
+for f in $(composure_keywords)
+do
+    eval "\$f() { :; }"
+done
+unset f
+END
+
+    # include cite() to enable custom keywords
+    typeset -f cite $*
 }
 
 : <<EOF
