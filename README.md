@@ -20,7 +20,7 @@ more intuitive:
 
 ## Craft - Draft - Revise - Write
 
-<img src="http://yuml.me/bd1c8892"/>
+<img src="http://yuml.me/47fcf7e2" />
 
 ### Crafting the command line
 
