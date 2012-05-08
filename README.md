@@ -14,6 +14,25 @@ more intuitive:
 * Use an unobtrusive help system with arbitrary shell metadata
 * Automatically version and store your shell functions with Git
 
+## Compatibility
+
+Composure is POSIX-compliant, and is known to work on ksh93, zsh, and
+bash, on osx and linux.
+
+Please feel free to open an issue if you have any difficulties on your system.
+
+## Installing
+
+Put composure.sh where you'd like it to live and source it from your
+shell's profile or rc file.
+
+On Bash:
+
+```bash
+    $ cd /where/you/put/composure.sh
+    $ echo "source $(pwd)/composure.sh" >> ~/.bashrc   # or, ~/.bash_profile on osx
+```
+
 ## Demo!
 
 [Composing a simple network monitoring script](http://ascii.io/a/476) (4 minutes)
@@ -192,49 +211,7 @@ try:
   $ lsl  # joy!
 ```
 
-## Installing
-
-Put composure.sh where you'd like it to live and source it from your
-shell's profile or rc file.
-
-On Bash:
-
-```bash
-    $ cd /where/you/put/composure.sh
-    $ echo "source $(pwd)/composure.sh" >> ~/.bashrc   # or, ~/.bash_profile on osx
-```
-
-# Compatibility
-
-Composure should be POSIX-compatible, and is known to work on ksh93, zsh, and
-bash, on osx and linux.
-
-Please feel free to open an issue if you have any difficulties on your system.
-
-## Additional Resources
-
-By default, most Bash shells support the command 'Ctrl-x,Ctrl-e' which opens
-the current command at the prompt in your favorite editor. I find that awkward
-to type, so I bind this to 'Ctrl-j'. Use the full power of your
-favorite text editor to quickly edit your complex commands!
-
-In bash, try adding the following to your ~/.bashrc or ~/.bash_profile:
-
-```bash
-  # 'jump' from prompt into EDITOR...
-  bind '"\C-j": edit-and-execute-command'
-```
-
-A few references I find helpful:
-
- * [vi editing mode cheat sheet](http://www.catonmat.net/download/bash-vi-editing-mode-cheat-sheet.txt)
- * [Bash Readline bindings](http://www.delorie.com/gnu/docs/bash/bashref_103.html)
-
-## Known Issues
-
-'glossary ()' and 'reference ()' do not support nested functions with metadata.
-
-## Credits
+# Credits
 
 Composure grew out of ideas taken from from Gary Bernhardt's hilarious talk [The Unix
 Chainsaw](http://www.confreaks.com/videos/615-cascadiaruby2011-the-unix-chainsaw) (31 minutes),
@@ -244,3 +221,7 @@ text](http://mitpress.mit.edu/sicp/full-text/book/book.html):
  * primitive expressions
  * means of combination
  * means of abstraction
+
+## Known Issues
+
+'glossary ()' and 'reference ()' do not support nested functions with metadata.
