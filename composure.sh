@@ -15,18 +15,13 @@ composure_keywords ()
 
 letterpress ()
 {
-    typeset metadata=$1 leftcol=${2:- } rightcol
+    typeset rightcol="$1" leftcol="${2:- }"
 
-    if [ -z "$metadata" ]; then
+    if [ -z "$rightcol" ]; then
         return
     fi
 
-    #TODO: this doesn't display properly on zsh for multi-line data
-    OLD=$IFS; IFS=$'\n'
-    for rightcol in $metadata; do
-        printf "%-20s%s\n" $leftcol $rightcol
-    done
-    IFS=$OLD
+    printf "%-20s%s\n" "$leftcol" "$rightcol"
 }
 
 transcribe ()
@@ -183,9 +178,9 @@ cite ()
 {
     about creates one or more meta keywords for use in your functions
     param one or more keywords
-    example $ cite url username
-    example $ url http://somewhere.com
-    example $ username alice
+    example '$ cite url username'
+    example '$ url http://somewhere.com'
+    example '$ username alice'
     group composure
 
     # this is the storage half of the 'metadata' system:
@@ -218,9 +213,9 @@ draft ()
     about wraps command from history into a new function, default is last command
     param 1: name to give function
     param 2: optional history line number
-    example $ ls
-    example $ draft list
-    example $ draft newfunc 1120  '# wraps command at history line 1120 in newfunc()'
+    example '$ ls'
+    example '$ draft list'
+    example '$ draft newfunc 1120  # wraps command at history line 1120 in newfunc()'
     group composure
 
     typeset func=$1
@@ -250,8 +245,8 @@ glossary ()
 {
     about displays help summary for all functions, or summary for a group of functions
     param 1: optional, group name
-    example $ glossary
-    example $ glossary misc
+    example '$ glossary'
+    example '$ glossary misc'
     group composure
 
     typeset targetgroup=${1:-}
@@ -273,7 +268,7 @@ metafor ()
     about prints function metadata associated with keyword
     param 1: function name
     param 2: meta keyword
-    example $ metafor glossary example
+    example '$ metafor glossary example'
     group composure
     typeset func=$1 keyword=$2
 
@@ -296,7 +291,7 @@ reference ()
 {
     about displays apidoc help for a specific function
     param 1: function name
-    example $ reference revise
+    example '$ reference revise'
     group composure
 
     typeset func=$1
@@ -305,6 +300,8 @@ reference ()
         reference reference
         return
     fi
+
+    typeset line
 
     typeset about="$(metafor $func about)"
     letterpress "$about" $func
@@ -319,25 +316,28 @@ reference ()
         letterpress "$version" 'version:'
     fi
 
-    typeset params="$(metafor $func param)"
-    if [ -n "$params" ]; then
+    if [ -n "$(metafor $func param)" ]; then
         printf "parameters:\n"
-        letterpress "$params"
+        metafor $func param | while read line
+        do
+            letterpress "$line"
+        done
     fi
 
-    typeset examples="$(metafor $func example)"
-    if [ -n "$examples" ]; then
+    if [ -n "$(metafor $func example)" ]; then
         printf "examples:\n"
-        letterpress "$examples"
+        metafor $func example | while read line
+        do
+            letterpress "$line"
+        done
     fi
-
 }
 
 revise ()
 {
     about loads function into editor for revision
     param 1: name of function
-    example $ revise myfunction
+    example '$ revise myfunction'
     group composure
 
     typeset func=$1
@@ -374,8 +374,8 @@ write ()
 {
     about writes one or more composed function definitions to stdout
     param one or more function names
-    example $ write finddown foo
-    example $ write finddown
+    example '$ write finddown foo'
+    example '$ write finddown'
     group composure
 
     if [ -z "$1" ]; then
