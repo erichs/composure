@@ -150,7 +150,7 @@ metafor ()
     # first 'cat' the function definition,
     # then 'grep' for the metadata keyword, and
     # then parse and massage the matching line
-    typeset -f $func | sed -n "s/;$//;s/^[ 	]*$keyword \([^([].*\)*$/\1/p"
+    typeset -f $func | sed -n "s/;$//;s/^[ 	]*$keyword \([^([].*\)*$/\1/p" | sed "s/^['\"]*//;s/['\"]*$//"
 }
 
 reference ()
