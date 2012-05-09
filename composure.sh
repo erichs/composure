@@ -252,9 +252,9 @@ glossary ()
     typeset targetgroup=${1:-}
 
     for func in $(typeset_functions); do
-        typeset about="$(metafor $func about)"
+        typeset about="$(typeset -f $func | metafor about)"
         if [ -n "$targetgroup" ]; then
-            typeset group="$(metafor $func group)"
+            typeset group="$(typeset -f $func | metafor group)"
             if [ "$group" != "$targetgroup" ]; then
                 continue  # skip non-matching groups, if specified
             fi
@@ -266,25 +266,23 @@ glossary ()
 metafor ()
 {
     about prints function metadata associated with keyword
-    param 1: function name
-    param 2: meta keyword
-    example '$ metafor glossary example'
+    param 1: meta keyword
+    example '$ typeset -f glossary | metafor example'
     group composure
-    typeset func=$1 keyword=$2
 
-    if [ -z "$func" ] || [ -z "$keyword" ]; then
+    typeset keyword=$1
+
+    if [ -z "$keyword" ]; then
         printf '%s\n' 'missing parameter(s)'
         reference metafor
         return
     fi
 
     # this sed-fu is the retrieval half of the 'metadata' system:
-    # first 'cat' the function definition,
-    # then 'grep' for the metadata keyword, and
-    # then parse and massage the matching line
+    # 'grep' for the metadata keyword, and then parse/filter the matching line
 
-    # function def   # strip ending ; # ignore keyword  # print remainder  # strip start/end quotes
-    typeset -f $func | sed -n "s/;$//;s/^[ 	]*$keyword \([^([].*\)*$/\1/p" | sed "s/^['\"]*//;s/['\"]*$//"
+    # strip ending ; # ignore thru keyword # print remainder # strip start/end quotes
+    sed -n "s/;$//;s/^[ 	]*$keyword \([^([].*\)*$/\1/p" | sed "s/^['\"]*//;s/['\"]*$//"
 }
 
 reference ()
@@ -303,30 +301,30 @@ reference ()
 
     typeset line
 
-    typeset about="$(metafor $func about)"
+    typeset about="$(typeset -f $func | metafor about)"
     letterpress "$about" $func
 
-    typeset author="$(metafor $func author)"
+    typeset author="$(typeset -f $func | metafor author)"
     if [ -n "$author" ]; then
         letterpress "$author" 'author:'
     fi
 
-    typeset version="$(metafor $func version)"
+    typeset version="$(typeset -f $func | metafor version)"
     if [ -n "$version" ]; then
         letterpress "$version" 'version:'
     fi
 
-    if [ -n "$(metafor $func param)" ]; then
+    if [ -n "$(typeset -f $func | metafor param)" ]; then
         printf "parameters:\n"
-        metafor $func param | while read line
+        typeset -f $func | metafor param | while read line
         do
             letterpress "$line"
         done
     fi
 
-    if [ -n "$(metafor $func example)" ]; then
+    if [ -n "$(typeset -f $func | metafor example)" ]; then
         printf "examples:\n"
-        metafor $func example | while read line
+        typeset -f $func | metafor example | while read line
         do
             letterpress "$line"
         done
