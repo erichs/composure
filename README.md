@@ -140,7 +140,7 @@ keyword(s), and use them freely in your functions:
 Retrieve your metadata later by calling 'metafor ()':
 
 ```bash
-  metafor foo about  # displays:
+  typeset -f foo | metafor about  # displays:
   perform mad script-foo
 ```
 
