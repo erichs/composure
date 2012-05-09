@@ -7,9 +7,9 @@ all_groups ()
 
     typeset func
     typeset file=$(mktemp /tmp/composure.XXXX)
-    for func in $(typeset_functions);
+    for func in $(typeset_functions)
     do
-        metafor $func group >> $file
+        typeset -f $func | metafor group >> $file
     done
     cat $file | sort | uniq
     rm $file
@@ -25,16 +25,6 @@ composed_functions ()
     do
         echo ${f%.inc}
     done | awk -F'/' '{print $NF}'
-}
-
-list_functions_by_group ()
-{
-    about lists functions belonging to a given group
-    param 1: group name
-    example $ list_functions_by_group tools
-    group composure_ext
-
-    glossary $1 | cut -d' ' -f 1
 }
 
 recompose ()
@@ -56,5 +46,28 @@ recompose_all ()
     for func in $(composed_functions)
     do
         load $func
+    done
+}
+
+functions_by_group ()
+{
+    about lists functions belonging to a given group
+    param 1: group name
+    example '$ list_functions_by_group tools'
+    group composure_ext
+
+    glossary $1 | cut -d' ' -f 1
+}
+
+overview ()
+{
+    about gives overview of available shell functions, by group
+    group composure_ext
+
+    for group in $(all_groups)
+    do
+        printf '%s\n' "group: $group"
+        glossary $group
+        printf '\n'
     done
 }
