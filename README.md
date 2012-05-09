@@ -14,6 +14,10 @@ more intuitive:
 * Use an unobtrusive help system with arbitrary shell metadata
 * Automatically version and store your shell functions with Git
 
+## Demo!
+
+[Composing a simple network monitoring script](http://ascii.io/a/476) (4 minutes)
+
 ## Compatibility
 
 Composure is POSIX-compliant, and is known to work on ksh93, zsh, and
@@ -32,10 +36,6 @@ On Bash:
     $ cd /where/you/put/composure.sh
     $ echo "source $(pwd)/composure.sh" >> ~/.bashrc   # or, ~/.bash_profile on osx
 ```
-
-## Demo!
-
-[Composing a simple network monitoring script](http://ascii.io/a/476) (4 minutes)
 
 ## Craft - Draft - Revise - Write
 
