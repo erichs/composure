@@ -228,8 +228,21 @@ draft ()
         return
     fi
 
+    # aliases bind tighter than function names, disallow them
+    if [ -n "$(type -a $func | grep 'is.*alias')" ]; then
+        printf '%s\n' "sorry, $(type -a $func). please choose another name."
+        return
+    fi
+
     if [ -z "$num" ]; then
-        cmd=$(fc -ln -1 | head -1 | sed 's/^[[:blank:]]*//')
+        # parse last command from fc output
+        # some versions of 'fix command, fc' need corrective lenses...
+        typeset myopic=$(fc -ln -1 | grep draft)
+        typeset lines=1
+        if [ -n "$myopic" ]; then
+            lines=2
+        fi
+        cmd=$(fc -ln -$lines | head -1 | sed 's/^[[:blank:]]*//')
     else
         # parse command from history line number
         cmd=$(eval "history | grep '^[[:blank:]]*$num' | head -1" | sed 's/^[[:blank:][:digit:]]*//')
