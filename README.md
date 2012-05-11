@@ -33,7 +33,9 @@ shell's profile or rc file.
 On Bash:
 
 ```bash
-    $ cd /where/you/put/composure.sh
+    $ cd /your/favorite/directory
+    $ curl -L http://git.io/composure > composure.sh
+    $ chmod +x composure.sh
     $ echo "source $(pwd)/composure.sh" >> ~/.bashrc   # or, ~/.bash_profile on osx
 ```
 
