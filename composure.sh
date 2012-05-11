@@ -294,8 +294,8 @@ metafor ()
     # this sed-fu is the retrieval half of the 'metadata' system:
     # 'grep' for the metadata keyword, and then parse/filter the matching line
 
-    # strip ending ; # ignore thru keyword # print remainder # strip start/end quotes
-    sed -n "s/;$//;s/^[ 	]*$keyword \([^([].*\)*$/\1/p" | sed "s/^['\"]*//;s/['\"]*$//"
+    # grep keyword # strip trailing '|"|; # ignore thru keyword and leading '|"
+    sed -n "/$keyword / s/['\";]*$//;s/^[ 	]*$keyword ['\"]*\([^([].*\)*$/\1/p"
 }
 
 reference ()
