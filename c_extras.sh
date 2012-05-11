@@ -1,20 +1,5 @@
 # Second-order functions for composure
 
-all_groups ()
-{
-    about displays all unique metadata groups
-    group composure_ext
-
-    typeset func
-    typeset file=$(mktemp /tmp/composure.XXXX)
-    for func in $(typeset_functions)
-    do
-        typeset -f $func | metafor group >> $file
-    done
-    cat $file | sort | uniq
-    rm $file
-}
-
 composed_functions ()
 {
     about list all functions stored in ~/.composure repository
@@ -25,6 +10,29 @@ composed_functions ()
     do
         echo ${f%.inc}
     done | awk -F'/' '{print $NF}'
+}
+
+functions_by_group ()
+{
+    about lists functions belonging to a given group
+    param 1: group name
+    example '$ list_functions_by_group tools'
+    group composure_ext
+
+    glossary $1 | cut -d' ' -f 1
+}
+
+overview ()
+{
+    about gives overview of available shell functions, by group
+    group composure_ext
+
+    for group in $(unique_metafor group)
+    do
+        printf '%s\n' "group: $group"
+        glossary $group
+        printf '\n'
+    done
 }
 
 recompose ()
@@ -49,25 +57,17 @@ recompose_all ()
     done
 }
 
-functions_by_group ()
+unique_metafor ()
 {
-    about lists functions belonging to a given group
-    param 1: group name
-    example '$ list_functions_by_group tools'
+    about displays all unique metadata for a given keyword
+    param 1: keyword
+    example '$ unique_metafor group'
     group composure_ext
 
-    glossary $1 | cut -d' ' -f 1
-}
+    typeset keyword=$1
 
-overview ()
-{
-    about gives overview of available shell functions, by group
-    group composure_ext
-
-    for group in $(all_groups)
-    do
-        printf '%s\n' "group: $group"
-        glossary $group
-        printf '\n'
-    done
+    typeset file=$(mktemp /tmp/composure.XXXX)
+    typeset -f | metafor $keyword >> $file
+    cat $file | sort | uniq
+    rm $file 2>/dev/null
 }
