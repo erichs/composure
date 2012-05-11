@@ -22,11 +22,37 @@ functions_by_group ()
     glossary $1 | cut -d' ' -f 1
 }
 
+overview_wip ()
+{
+    typeset grouplist=$(mktemp /tmp/grouplist.XXXX)
+    typeset func
+    for func in $(typeset_functions); do
+        typeset group="$(typeset -f $func | metafor group)"
+        if [ -z "$group" ]; then
+            group='misc'
+        fi
+        typeset about="$(typeset -f $func | metafor about)"
+        letterpress "$about" $func >> $grouplist.$group
+        echo $grouplist.$group >> $grouplist
+    done
+
+    typeset group
+    typeset gfile
+    for gfile in $(cat $grouplist | sort | uniq); do
+        printf '%s\n' "${gfile##*.}:"
+        cat $gfile
+        printf '\n'
+        rm $gfile 2>/dev/null
+    done
+    rm $grouplist 2>/dev/null
+}
+
 overview ()
 {
     about gives overview of available shell functions, by group
     group composure_ext
 
+    typeset group
     for group in $(unique_metafor group)
     do
         printf '%s\n' "group: $group"
@@ -39,7 +65,7 @@ recompose ()
 {
     about loads a stored function from ~/.composure repo
     param 1: name of function
-    example $ load myfunc
+    example '$ load myfunc'
     group composure_ext
 
     source ~/.composure/$1.inc
