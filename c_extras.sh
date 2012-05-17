@@ -2,8 +2,8 @@
 
 composed_functions ()
 {
-    about list all functions stored in ~/.composure repository
-    group composure_ext
+    about 'list all functions stored in ~/.composure repository'
+    group 'composure_ext'
 
     typeset f
     for f in ~/.composure/*.inc
@@ -12,21 +12,27 @@ composed_functions ()
     done | awk -F'/' '{print $NF}'
 }
 
-functions_by_group ()
+findgroup ()
 {
-    about lists functions belonging to a given group
-    param 1: group name
-    example '$ list_functions_by_group tools'
-    group composure_ext
+    about 'finds all functions belonging to group'
+    param '1: name of group'
+    example '$ findgroup tools'
+    group 'composure_ext'
 
-    glossary $1 | cut -d' ' -f 1
+    typeset func
+    for func in $(typeset_functions)
+    do
+        typeset group="$(typeset -f $func | metafor group)"
+        if [ "$group" = "$1" ]; then
+            echo "$func"
+        fi
+    done
 }
-
 
 overview ()
 {
-    about gives overview of available shell functions, by group
-    group composure_ext
+    about 'gives overview of available shell functions, by group'
+    group 'composure_ext'
 
     # display a brief progress message...
     printf '%s' 'building documentation...'
@@ -58,18 +64,18 @@ overview ()
 
 recompose ()
 {
-    about loads a stored function from ~/.composure repo
-    param 1: name of function
+    about 'loads a stored function from ~/.composure repo'
+    param '1: name of function'
     example '$ load myfunc'
-    group composure_ext
+    group 'composure_ext'
 
     source ~/.composure/$1.inc
 }
 
 recompose_all ()
 {
-    about loads all stored functions from ~/.composure repo
-    group composure_ext
+    about 'loads all stored functions from ~/.composure repo'
+    group 'composure_ext'
 
     typeset func
     for func in $(composed_functions)
@@ -80,10 +86,10 @@ recompose_all ()
 
 unique_metafor ()
 {
-    about displays all unique metadata for a given keyword
-    param 1: keyword
+    about 'displays all unique metadata for a given keyword'
+    param '1: keyword'
     example '$ unique_metafor group'
-    group composure_ext
+    group 'composure_ext'
 
     typeset keyword=$1
 
