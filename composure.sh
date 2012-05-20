@@ -182,12 +182,12 @@ unset f
 
 cite ()
 {
-    about creates one or more meta keywords for use in your functions
-    param one or more keywords
+    about 'creates one or more meta keywords for use in your functions'
+    param 'one or more keywords'
     example '$ cite url username'
     example '$ url http://somewhere.com'
     example '$ username alice'
-    group composure
+    group 'composure'
 
     # this is the storage half of the 'metadata' system:
     # we create dynamic metadata keywords with function wrappers around
@@ -216,13 +216,13 @@ cite ()
 
 draft ()
 {
-    about wraps command from history into a new function, default is last command
-    param 1: name to give function
-    param 2: optional history line number
+    about 'wraps command from history into a new function, default is last command'
+    param '1: name to give function'
+    param '2: optional history line number'
     example '$ ls'
     example '$ draft list'
     example '$ draft newfunc 1120  # wraps command at history line 1120 in newfunc()'
-    group composure
+    group 'composure'
 
     typeset func=$1
     typeset num=$2
@@ -262,11 +262,11 @@ draft ()
 
 glossary ()
 {
-    about displays help summary for all functions, or summary for a group of functions
-    param 1: optional, group name
+    about 'displays help summary for all functions, or summary for a group of functions'
+    param '1: optional, group name'
     example '$ glossary'
     example '$ glossary misc'
-    group composure
+    group 'composure'
 
     typeset targetgroup=${1:-}
 
@@ -284,10 +284,10 @@ glossary ()
 
 metafor ()
 {
-    about prints function metadata associated with keyword
-    param 1: meta keyword
+    about 'prints function metadata associated with keyword'
+    param '1: meta keyword'
     example '$ typeset -f glossary | metafor example'
-    group composure
+    group 'composure'
 
     typeset keyword=$1
 
@@ -306,10 +306,10 @@ metafor ()
 
 reference ()
 {
-    about displays apidoc help for a specific function
-    param 1: function name
+    about 'displays apidoc help for a specific function'
+    param '1: function name'
     example '$ reference revise'
-    group composure
+    group 'composure'
 
     typeset func=$1
     if [ -z "$func" ]; then
@@ -352,10 +352,19 @@ reference ()
 
 revise ()
 {
-    about loads function into editor for revision
-    param 1: name of function
+    about 'loads function into editor for revision'
+    param '<optional> -e: revise version stored in ENV'
+    param '1: name of function'
     example '$ revise myfunction'
-    group composure
+    example '$ revise -e myfunction'
+    example 'save a zero-length file to abort revision'
+    group 'composure'
+
+    typeset source='git'
+    if [ "$1" = '-e' ]; then
+        source='env'
+        shift
+    fi
 
     typeset func=$1
     typeset temp=$(mktemp /tmp/revise.XXXX)
@@ -367,12 +376,12 @@ revise ()
     fi
 
     # populate tempfile...
-    if [ -f ~/.composure/$func.inc ]; then
-        # ...with contents of latest git revision...
-        cat ~/.composure/$func.inc >> $temp
-    else
-        # ...or from ENV if not previously versioned
+    if [ "$source" = 'env' ] || [ ! -f ~/.composure/$func.inc ]; then
+        # ...with ENV if specified or not previously versioned
         typeset -f $func >> $temp
+    else
+        # ...or with contents of latest git revision
+        cat ~/.composure/$func.inc >> $temp
     fi
 
     if [ -z "$EDITOR" ]
@@ -381,19 +390,23 @@ revise ()
     fi
 
     $EDITOR $temp
-    . $temp  # source edited file
-
-    transcribe $func $temp revise
+    if [ -s $temp ]; then
+        . $temp  # source edited file
+        transcribe $func $temp revise
+    else
+        # zero-length files abort revision
+        printf '%s\n' 'zero-length file, revision aborted!'
+    fi
     rm $temp
 }
 
 write ()
 {
-    about writes one or more composed function definitions to stdout
-    param one or more function names
+    about 'writes one or more composed function definitions to stdout'
+    param 'one or more function names'
     example '$ write finddown foo'
     example '$ write finddown'
-    group composure
+    group 'composure'
 
     if [ -z "$1" ]; then
         printf '%s\n' 'missing parameter(s)'
