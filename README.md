@@ -227,3 +227,8 @@ text](http://mitpress.mit.edu/sicp/full-text/book/book.html):
 ## Known Issues
 
 'glossary ()' and 'reference ()' do not support nested functions with metadata.
+
+if the SHELL environment variable is unset or incorrect for your current shell,
+typeset_functions() will not work correctly. This will negatively affect
+metadata retrieval with glossary(). Please manually export the correct value of
+SHELL if you encounter difficulties with metadata retrieval.
