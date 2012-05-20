@@ -1,4 +1,11 @@
 
+1.0.1 / 2012-05-19
+==================
+
+  * revise() takes an optional -e flag
+  * revise() aborts on an empty file
+  * metadata cleaned up
+
 1.0 / 2012-05-17
 ==================
 
