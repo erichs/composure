@@ -67,14 +67,15 @@ something out, hitting the up arrow and perhaps adding a filter with a pipe:
   $ cat servers.txt | grep down | mail -s "down server(s)" admin@here.com
 ```
 
-Composure helps by letting your quickly draft simple shell functions, breaking down
+Composure helps by letting you quickly draft simple shell functions, breaking down
 your long pipe filters and complex commands into readable and reusable chunks.
 
 ### Draft first, ask questions later
 
 Once you've crafted your gem of a command, don't throw it away! Use 'draft ()'
-and give it a good name. This stores your last command as a function you can
-reuse later. Think of it like a rough draft.
+and give it a [good name](http://martinfowler.com/bliki/TwoHardThings.html).
+This stores your last command as a function you can reuse later. Think of it
+like a rough draft.
 
 ```bash
   $ cat servers.txt
