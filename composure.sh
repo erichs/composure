@@ -8,12 +8,12 @@
 
 # 'plumbing' functions
 
-composure_keywords ()
+_composure_keywords ()
 {
     echo "about author example group param version"
 }
 
-letterpress ()
+_letterpress ()
 {
     typeset rightcol="$1" leftcol="${2:- }"
 
@@ -24,7 +24,7 @@ letterpress ()
     printf "%-20s%s\n" "$leftcol" "$rightcol"
 }
 
-transcribe ()
+_transcribe ()
 {
     typeset func=$1
     typeset file=$2
@@ -66,7 +66,7 @@ transcribe ()
                             git commit -m 'initial commit'
                         )
                         # if at first you don't succeed...
-                        transcribe "$func" "$file" "$operation"
+                        _transcribe "$func" "$file" "$operation"
                         valid=1
                         ;;
                     n|no|N|No|NO)
@@ -82,65 +82,7 @@ transcribe ()
     fi
 }
 
-transcribe ()
-{
-    typeset func=$1
-    typeset file=$2
-    typeset operation="$3"
-
-    if git --version >/dev/null 2>&1; then
-        if [ -d ~/.composure ]; then
-            (
-                cd ~/.composure
-                if git rev-parse 2>/dev/null; then
-                    if [ ! -f $file ]; then
-                        printf "%s\n" "Oops! Couldn't find $file to version it for you..."
-                        return
-                    fi
-                    cp $file ~/.composure/$func.inc
-                    git add --all .
-                    git commit -m "$operation $func"
-                fi
-            )
-        else
-            if [ "$USE_COMPOSURE_REPO" = "0" ]; then
-                return  # if you say so...
-            fi
-            printf "%s\n" "I see you don't have a ~/.composure repo..."
-            typeset input
-            typeset valid=0
-            while [ $valid != 1 ]; do
-                printf "\n%s" 'would you like to create one? y/n: '
-                read input
-                case $input in
-                    y|yes|Y|Yes|YES)
-                        (
-                            echo 'creating git repository for your functions...'
-                            mkdir ~/.composure
-                            cd ~/.composure
-                            git init
-                            echo "composure stores your function definitions here" > README.txt
-                            git add README.txt
-                            git commit -m 'initial commit'
-                        )
-                        # if at first you don't succeed...
-                        transcribe "$func" "$file" "$operation"
-                        valid=1
-                        ;;
-                    n|no|N|No|NO)
-                        printf "%s\n" "ok. add 'export USE_COMPOSURE_REPO=0' to your startup script to disable this message."
-                        valid=1
-                    ;;
-                    *)
-                        printf "%s\n" "sorry, didn't get that..."
-                    ;;
-                esac
-            done
-       fi
-    fi
-}
-
-typeset_functions ()
+_typeset_functions ()
 {
     # unfortunately, there does not seem to be a easy, portable way to list just the
     # names of the defined shell functions...
@@ -171,7 +113,7 @@ typeset_functions ()
 
 
 # bootstrap metadata keywords for porcelain functions
-for f in $(composure_keywords)
+for f in $(_composure_keywords)
 do
     eval "$f() { :; }"
 done
@@ -256,7 +198,7 @@ draft ()
     eval "$func() { $cmd; }"
     typeset file=$(mktemp /tmp/draft.XXXX)
     typeset -f $func > $file
-    transcribe $func $file draft
+    _transcribe $func $file draft
     rm $file 2>/dev/null
 }
 
@@ -270,7 +212,7 @@ glossary ()
 
     typeset targetgroup=${1:-}
 
-    for func in $(typeset_functions); do
+    for func in $(_typeset_functions); do
         if [ -n "$targetgroup" ]; then
             typeset group="$(typeset -f $func | metafor group)"
             if [ "$group" != "$targetgroup" ]; then
@@ -278,7 +220,7 @@ glossary ()
             fi
         fi
         typeset about="$(typeset -f $func | metafor about)"
-        letterpress "$about" $func
+        _letterpress "$about" $func
     done
 }
 
@@ -321,23 +263,23 @@ reference ()
     typeset line
 
     typeset about="$(typeset -f $func | metafor about)"
-    letterpress "$about" $func
+    _letterpress "$about" $func
 
     typeset author="$(typeset -f $func | metafor author)"
     if [ -n "$author" ]; then
-        letterpress "$author" 'author:'
+        _letterpress "$author" 'author:'
     fi
 
     typeset version="$(typeset -f $func | metafor version)"
     if [ -n "$version" ]; then
-        letterpress "$version" 'version:'
+        _letterpress "$version" 'version:'
     fi
 
     if [ -n "$(typeset -f $func | metafor param)" ]; then
         printf "parameters:\n"
         typeset -f $func | metafor param | while read line
         do
-            letterpress "$line"
+            _letterpress "$line"
         done
     fi
 
@@ -345,7 +287,7 @@ reference ()
         printf "examples:\n"
         typeset -f $func | metafor example | while read line
         do
-            letterpress "$line"
+            _letterpress "$line"
         done
     fi
 }
@@ -392,7 +334,7 @@ revise ()
     $EDITOR $temp
     if [ -s $temp ]; then
         . $temp  # source edited file
-        transcribe $func $temp revise
+        _transcribe $func $temp revise
     else
         # zero-length files abort revision
         printf '%s\n' 'zero-length file, revision aborted!'
@@ -416,7 +358,7 @@ write ()
 
 # bootstrap metadata
 cat <<END
-for f in $(composure_keywords)
+for f in $(_composure_keywords)
 do
     eval "\$f() { :; }"
 done
