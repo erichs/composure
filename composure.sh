@@ -1,10 +1,12 @@
 # composure - by erichs
 # light-hearted functions for intuitive shell programming
 
-# install: source this script in your ~/.profile or ~/.${SHELL}rc script
-
+# version: 1.0.2
 # latest source available at http://git.io/composure
+
+# install: source this script in your ~/.profile or ~/.${SHELL}rc script
 # known to work on bash, zsh, and ksh93
+
 
 # 'plumbing' functions
 
