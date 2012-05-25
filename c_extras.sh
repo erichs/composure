@@ -20,7 +20,7 @@ findgroup ()
     group 'composure_ext'
 
     typeset func
-    for func in $(typeset_functions)
+    for func in $(_typeset_functions)
     do
         typeset group="$(typeset -f $func | metafor group)"
         if [ "$group" = "$1" ]; then
@@ -38,7 +38,7 @@ overview ()
     printf '%s' 'building documentation...'
     typeset grouplist=$(mktemp /tmp/grouplist.XXXX);
     typeset func;
-    for func in $(typeset_functions);
+    for func in $(_typeset_functions);
     do
         typeset group="$(typeset -f $func | metafor group)";
         if [ -z "$group" ]; then
