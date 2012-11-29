@@ -1,3 +1,9 @@
+1.0.3 / 2012-11-29
+==================
+
+* make revise() smarter
+* write() includes shebang and main() invocation
+
 1.0.2 / 2012-05-24
 ==================
 
