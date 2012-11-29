@@ -43,7 +43,10 @@ _transcribe ()
                     fi
                     cp $file ~/.composure/$func.inc
                     git add --all .
-                    git commit -m "$operation $func"
+                    typeset comment
+                    echo -n "Git Comment: "
+                    read comment
+                    git commit -m "$operation $func: $comment"
                 fi
             )
         else
@@ -335,7 +338,23 @@ revise ()
 
     $EDITOR $temp
     if [ -s $temp ]; then
-        . $temp  # source edited file
+        typeset edit='N'
+
+        # source edited file
+        . $temp || edit='Y'
+
+        while [ $edit = 'Y' ]; do
+            echo -n "Re-edit? Y/N: "
+            read edit
+            case $edit in
+               y|yes|Y|Yes|YES)
+                   edit='Y'
+                   $EDITOR $temp
+                   . $temp && edit='N';;
+               *)
+                   edit='N';;
+            esac
+        done
         _transcribe $func $temp revise
     else
         # zero-length files abort revision
