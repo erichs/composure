@@ -123,7 +123,7 @@ When it is time to put your function or functions to use in a shell script, just
   $ write finddown > finddown.sh
 ```
 
-Add a shebang line, and you're ready to go!
+Edit the main() function, chmod +x, and you're ready to go!
 
 ## Arbitrary shell metadata!
 
