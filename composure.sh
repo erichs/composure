@@ -346,17 +346,19 @@ revise ()
 
 write ()
 {
-    about 'writes one or more composed function definitions to stdout'
-    param 'one or more function names'
-    example '$ write finddown foo'
-    example '$ write finddown'
-    group 'composure'
+about 'writes one or more composed function definitions to stdout'
+param 'one or more function names'
+example '$ write finddown foo'
+example '$ write finddown'
+group 'composure'
 
-    if [ -z "$1" ]; then
-        printf '%s\n' 'missing parameter(s)'
-        reference write
-        return
-    fi
+if [ -z "$1" ]; then
+    printf '%s\n' 'missing parameter(s)'
+    reference write
+    return
+fi
+
+echo "#!/usr/bin/env $(basename $SHELL)"
 
 # bootstrap metadata
 cat <<END
@@ -367,8 +369,17 @@ done
 unset f
 END
 
-    # include cite() to enable custom keywords
-    typeset -f cite $*
+# write out function definitons
+typeset -f cite $*
+
+cat <<END
+main() {
+    echo "edit me to do something useful!"
+    exit 0
+}
+
+main \$*
+END
 }
 
 : <<EOF
