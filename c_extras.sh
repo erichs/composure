@@ -45,7 +45,7 @@ overview ()
             group='misc';
         fi;
         typeset about="$(typeset -f $func | metafor about)";
-        letterpress "$about" $func >> $grouplist.$group;
+        _letterpress "$about" $func >> $grouplist.$group;
         echo $grouplist.$group >> $grouplist;
     done;
     # clear progress message
