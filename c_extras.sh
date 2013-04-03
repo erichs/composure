@@ -3,7 +3,7 @@
 composed_functions ()
 {
     about 'list all functions stored in ~/.composure repository'
-    group 'composure_ext'
+    group 'composure'
 
     typeset f
     for f in ~/.composure/*.inc
@@ -17,7 +17,7 @@ findgroup ()
     about 'finds all functions belonging to group'
     param '1: name of group'
     example '$ findgroup tools'
-    group 'composure_ext'
+    group 'composure'
 
     typeset func
     for func in $(_typeset_functions)
@@ -32,7 +32,7 @@ findgroup ()
 overview ()
 {
     about 'gives overview of available shell functions, by group'
-    group 'composure_ext'
+    group 'composure'
 
     # display a brief progress message...
     printf '%s' 'building documentation...'
@@ -67,7 +67,7 @@ recompose ()
     about 'loads a stored function from ~/.composure repo'
     param '1: name of function'
     example '$ load myfunc'
-    group 'composure_ext'
+    group 'composure'
 
     source ~/.composure/$1.inc
 }
@@ -75,7 +75,7 @@ recompose ()
 recompose_all ()
 {
     about 'loads all stored functions from ~/.composure repo'
-    group 'composure_ext'
+    group 'composure'
 
     typeset func
     for func in $(composed_functions)
@@ -89,7 +89,7 @@ unique_metafor ()
     about 'displays all unique metadata for a given keyword'
     param '1: keyword'
     example '$ unique_metafor group'
-    group 'composure_ext'
+    group 'composure'
 
     typeset keyword=$1
 
