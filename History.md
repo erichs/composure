@@ -1,3 +1,9 @@
+1.0.4 / 2013-08-30
+==================
+
+* increase letterpress spacing
+* refactor composure extras
+
 1.0.3 / 2012-11-29
 ==================
 
