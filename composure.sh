@@ -1,7 +1,7 @@
 # composure - by erichs
 # light-hearted functions for intuitive shell programming
 
-# version: 1.0.3
+# version: 1.0.4
 # latest source available at http://git.io/composure
 
 # install: source this script in your ~/.profile or ~/.${SHELL}rc script
@@ -17,13 +17,26 @@ _composure_keywords ()
 
 _letterpress ()
 {
-    typeset rightcol="$1" leftcol="${2:- }"
+    typeset rightcol="$1" leftcol="${2:- }" leftwidth="${3:-20}"
 
     if [ -z "$rightcol" ]; then
         return
     fi
 
-    printf "%-20s%s\n" "$leftcol" "$rightcol"
+    printf "%-${leftwidth}s%s\n" "$leftcol" "$rightcol"
+}
+
+_max_letterpress_width ()
+{
+  awk 'BEGIN{ maxlength=0 }
+  {
+    for(i=1;i<=NF;i++)
+      if (length($i)>maxlength)
+      {
+        maxlength=length($i)
+      }
+  }
+  END{ print maxlength + 5}' <( _typeset_functions )
 }
 
 _transcribe ()
@@ -215,7 +228,7 @@ glossary ()
     example '$ glossary misc'
     group 'composure'
 
-    typeset targetgroup=${1:-}
+    typeset targetgroup=${1:-} maxwidth=$(_max_letterpress_width)
 
     for func in $(_typeset_functions); do
         if [ -n "$targetgroup" ]; then
@@ -225,7 +238,7 @@ glossary ()
             fi
         fi
         typeset about="$(typeset -f $func | metafor about)"
-        _letterpress "$about" $func
+        _letterpress "$about" $func $maxwidth
     done
 }
 
@@ -423,3 +436,4 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTIO
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 EOF
+
