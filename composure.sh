@@ -28,7 +28,7 @@ _letterpress ()
 
 _max_letterpress_width ()
 {
-  awk 'BEGIN{ maxlength=0 }
+  _typeset_functions | awk 'BEGIN{ maxlength=0 }
   {
     for(i=1;i<=NF;i++)
       if (length($i)>maxlength)
@@ -36,7 +36,7 @@ _max_letterpress_width ()
         maxlength=length($i)
       }
   }
-  END{ print maxlength + 5}' <( _typeset_functions )
+  END{ print maxlength + 5}'
 }
 
 _transcribe ()
