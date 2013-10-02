@@ -1,6 +1,6 @@
 
 all:
-	@echo "Try: make test"
+	@echo "Try: make tests"
 	@false
 
 tests:
