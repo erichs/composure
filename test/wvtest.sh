@@ -140,7 +140,7 @@ WVSTART()
 {
 	echo >&2
 	_wvfind_caller
-	echo "Testing \"$*\" in $WVCALLER_FILE:" >&2
+	echo "Testing \"$*\" with $SHELL in $WVCALLER_FILE:" >&2
 }
 
 WVSOURCE()

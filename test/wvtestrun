@@ -114,14 +114,16 @@ while (<$fh>)
     chomp;
     s/\r//g;
 
-    if (/^\s*Testing "(.*)" in (.*):\s*$/)
+    if (/^\s*Testing "(.*)" with (.*) in (.*):\s*$/)
     {
         alarm(120);
-	my ($sect, $file) = ($1, $2);
+	my ($sect, $shell, $file) = ($1, $2, $3);
 
 	endsect();
 
-	printf("! %s  %s: ", $file, $sect);
+  chomp($shell=`basename $shell`);
+
+	printf("! %s %s %s: ", $shell, $file, $sect);
 	@log = ();
 	$start = $stop;
     }
