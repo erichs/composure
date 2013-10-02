@@ -32,10 +32,17 @@ ___test_typeset_functions () { :; }
 WVPASS [ $(_typeset_functions | wc -l) -gt $count ]
 unset -f ___test_typeset_functions
 
+WVSTART "_longest_function_name_length"
+WVPASS [ $(_longest_function_name_length) -gt 0 ]
+abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz() { :; }
+WVPASS [ $(_longest_function_name_length) -eq 52 ]
+unset -f abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+
 WVSTART "_max_letterpress_width"
 WVPASS [ $(_max_letterpress_width) -gt 0 ]
 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz() { :; }
 _max_letterpress_width
 WVPASS [ $(_max_letterpress_width) -eq 57 ]
+unset -f abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
 
 WVSTART "_transcribe"

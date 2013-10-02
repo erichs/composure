@@ -26,9 +26,9 @@ _letterpress ()
   printf "%-${leftwidth}s%s\n" "$leftcol" "$rightcol"
 }
 
-_max_letterpress_width ()
+_longest_function_name_length ()
 {
-  _typeset_functions | awk 'BEGIN{ maxlength=0 }
+   _typeset_functions | awk 'BEGIN{ maxlength=0 }
   {
   for(i=1;i<=NF;i++)
     if (length($i)>maxlength)
@@ -36,7 +36,13 @@ _max_letterpress_width ()
     maxlength=length($i)
     }
   }
-  END{ print maxlength + 5}'
+  END{ print maxlength}'
+}
+
+_max_letterpress_width ()
+{
+  typeset max=$(_longest_function_name_length)
+  echo "$max + 5" | bc
 }
 
 _transcribe ()
