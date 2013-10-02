@@ -4,7 +4,7 @@ all:
 	@false
 
 tests:
-	(cd test && make tests)
+	cd test && make tests
 
 clean::
 	rm -f test/*~ test/t/*~
