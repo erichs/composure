@@ -1,6 +1,6 @@
 #!/bin/sh
 . ./wvtest.sh
-WVSOURCE ../composure.sh
+. ../composure.sh
 
 _max_letterpress_width
 WVSTART "_composure_keywords"

@@ -131,10 +131,3 @@ WVSTART()
 	_wvfind_caller
 	echo "Testing \"$*\" with $SHELL in $TESTFILE:" >&2
 }
-
-WVSOURCE()
-{
-  WVSOURCED_FILE=$1
-  . "$1"
-}
-
