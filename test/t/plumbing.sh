@@ -36,6 +36,6 @@ WVSTART "_max_letterpress_width"
 WVPASS [ $(_max_letterpress_width) -gt 0 ]
 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz() { :; }
 _max_letterpress_width
-WVPASS [ $(_max_letterpress_width) -eq 51 ]
+WVPASS [ $(_max_letterpress_width) -eq 57 ]
 
 WVSTART "_transcribe"
