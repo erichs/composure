@@ -41,8 +41,7 @@ _longest_function_name_length ()
 
 _max_letterpress_width ()
 {
-  typeset max=$(_longest_function_name_length)
-  echo "$max + 5" | bc
+  echo $(_longest_function_name_length) | awk '{print $1 + 5}'
 }
 
 _transcribe ()
