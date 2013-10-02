@@ -1,0 +1,5 @@
+language: c
+script: make tests
+branches:
+  only:
+    - testing
