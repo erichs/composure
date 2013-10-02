@@ -19,26 +19,15 @@ _wvtextclean()
 }
 
 
-if [ -n "$BASH_VERSION" ]; then
-	_wvfind_caller()
-	{
-		LVL=$1
-		WVCALLER_FILE=${BASH_SOURCE[2]}
-		WVCALLER_LINE=${BASH_LINENO[1]}
-	}
-else
-	_wvfind_caller()
-	{
-		LVL=$1
-    if [ -n "$WVSOURCED_FILE" ]; then
-      WVCALLER_FILE="$WVSOURCED_FILE"
-    else
-      WVCALLER_FILE="unknown"
-    fi
-		WVCALLER_LINE=0
-	}
-fi
-
+_wvfind_caller()
+{
+  LVL=$1
+  if [ -n "$BASH_VERSION" ]; then
+    WVCALLER_LINE=${BASH_LINENO[1]}
+  else
+    WVCALLER_LINE=0
+  fi
+}
 
 _wvcheck()
 {
@@ -48,7 +37,7 @@ _wvcheck()
 	if [ "$CODE" -ne 0 ]; then
 		OK=FAILED
 	fi
-  echo "! $(basename $SHELL):$WVCALLER_FILE:$WVCALLER_LINE  $TEXT  $OK" >&2
+  echo "! $(basename $SHELL):$TESTFILE:$WVCALLER_LINE  $TEXT  $OK" >&2
 	if [ "$CODE" -ne 0 ]; then
 		exit $CODE
 	else
@@ -140,7 +129,7 @@ WVSTART()
 {
 	echo >&2
 	_wvfind_caller
-	echo "Testing \"$*\" with $SHELL in $WVCALLER_FILE:" >&2
+	echo "Testing \"$*\" with $SHELL in $TESTFILE:" >&2
 }
 
 WVSOURCE()
