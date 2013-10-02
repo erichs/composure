@@ -107,23 +107,18 @@ _typeset_functions ()
 
     # first, determine our shell:
     typeset shell
-    if [ -n "$SHELL" ]; then
-        shell=$(basename $SHELL)  # we assume this is set correctly!
-    else
-        # we'll have to try harder
-        # here's a hack I modified from a StackOverflow post:
-        # we loop over the ps listing for the current process ($$), and print the last column (CMD)
-        # stripping any leading hyphens bash sometimes throws in there
-        typeset x ans
-        typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" $ans | sed 's/^-*//')
-        typeset shell=$(basename $this)  # e.g. /bin/bash => bash
-    fi
+    # here's a hack I modified from a StackOverflow post:
+    # we loop over the ps listing for the current process ($$), and print the last column (CMD)
+    # stripping any leading hyphens bash sometimes throws in there
+    typeset x ans
+    typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" $ans | sed 's/^-*//')
+    typeset shell=$(basename $this)  # e.g. /bin/bash => bash
     case "$shell" in
-        bash)
+        sh|bash)
             typeset -F | awk '{print $3}'
             ;;
         *)
-            # trim everything following '()' in ksh
+            # trim everything following '()' in ksh/zsh
             typeset +f | sed 's/().*$//'
             ;;
     esac
