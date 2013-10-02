@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/erichs/composure.png?branch=testing)](https://travis-ci.org/erichs/composure)
+
+
      e88~~\  e88~-_  888-~88e-~88e 888-~88e   e88~-_   d88~\ 888  888 888-~\  e88~~8e
     d888    d888   i 888  888  888 888  888b d888   i C888   888  888 888    d888  88b
     8888    8888   | 888  888  888 888  8888 8888   |  Y88b  888  888 888    8888__888
@@ -13,8 +16,6 @@ more intuitive:
 * Transition organically from command, to function, to script
 * Use an unobtrusive help system with arbitrary shell metadata
 * Automatically version and store your shell functions with Git
-
-[![Build Status](https://travis-ci.org/erichs/composure.png?branch=testing)](https://travis-ci.org/erichs/composure)
 
 ## Demo!
 
