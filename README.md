@@ -14,6 +14,8 @@ more intuitive:
 * Use an unobtrusive help system with arbitrary shell metadata
 * Automatically version and store your shell functions with Git
 
+[![Build Status](https://travis-ci.org/erichs/composure.png?branch=testing)](https://travis-ci.org/erichs/composure)
+
 ## Demo!
 
 [Composing a simple network monitoring script](http://ascii.io/a/476) (4 minutes)
@@ -233,4 +235,3 @@ if the SHELL environment variable is unset or incorrect for your current shell,
 typeset_functions() will not work correctly. This will negatively affect
 metadata retrieval with glossary(). Please manually export the correct value of
 SHELL if you encounter difficulties with metadata retrieval.
-
