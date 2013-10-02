@@ -39,40 +39,47 @@ _longest_function_name_length ()
   END{ print maxlength}'
 }
 
-_max_letterpress_width ()
+_add_composure_file()
 {
-  echo $(_longest_function_name_length) | awk '{print $1 + 5}'
+  typeset func="$1"
+  typeset file="$2"
+  typeset operation="$3"
+  typeset comment="${4:-}"
+
+  (
+    cd ~/.composure
+    if git rev-parse 2>/dev/null; then
+      if [ ! -f $file ]; then
+        printf "%s\n" "Oops! Couldn't find $file to version it for you..."
+        return
+      fi
+      cp $file ~/.composure/$func.inc
+      git add --all .
+      if [ -z "$comment" ]; then
+        echo -n "Git Comment: "
+        read comment
+      fi
+      git commit -m "$operation $func: $comment"
+    fi
+  )
 }
 
 _transcribe ()
 {
-  typeset func=$1
-  typeset file=$2
+  typeset func="$1"
+  typeset file="$2"
   typeset operation="$3"
+  typeset comment="${4:-}"
 
   if git --version >/dev/null 2>&1; then
     if [ -d ~/.composure ]; then
-      (
-        cd ~/.composure
-        if git rev-parse 2>/dev/null; then
-          if [ ! -f $file ]; then
-            printf "%s\n" "Oops! Couldn't find $file to version it for you..."
-            return
-          fi
-          cp $file ~/.composure/$func.inc
-          git add --all .
-          typeset comment
-          echo -n "Git Comment: "
-          read comment
-          git commit -m "$operation $func: $comment"
-        fi
-      )
+      _add_composure_file "$func" "$file" "$operation" "$comment"
     else
       if [ "$USE_COMPOSURE_REPO" = "0" ]; then
         return  # if you say so...
       fi
       printf "%s\n" "I see you don't have a ~/.composure repo..."
-      typeset input
+      typeset input=''
       typeset valid=0
       while [ $valid != 1 ]; do
         printf "\n%s" 'would you like to create one? y/n: '
@@ -229,7 +236,8 @@ glossary ()
   example '$ glossary misc'
   group 'composure'
 
-  typeset targetgroup=${1:-} maxwidth=$(_max_letterpress_width)
+  typeset targetgroup=${1:-}
+  typeset maxwidth=$(_longest_function_name_length | awk '{print $1 + 5}')
 
   for func in $(_typeset_functions); do
     if [ -n "$targetgroup" ]; then
