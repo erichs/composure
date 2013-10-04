@@ -97,7 +97,7 @@ _transcribe ()
               git commit -m 'initial commit'
             )
             # if at first you don't succeed...
-            _transcribe "$func" "$file" "$operation"
+            _transcribe "$func" "$file" "$operation" "$comment"
             valid=1
             ;;
           n|no|N|No|NO)
