@@ -50,11 +50,11 @@ _add_composure_file()
   (
     cd "$COMPOSURE_DIR"
     if git rev-parse 2>/dev/null; then
-      if [ ! -f $file ]; then
+      if [ ! -f "$file" ]; then
         printf "%s\n" "Oops! Couldn't find $file to version it for you..."
         return
       fi
-      cp $file "$COMPOSURE_DIR/$func.inc"
+      cp "$file" "$COMPOSURE_DIR/$func.inc"
       git add --all .
       if [ -z "$comment" ]; then
         echo -n "Git Comment: "
