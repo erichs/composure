@@ -7,6 +7,7 @@
 # install: source this script in your ~/.profile or ~/.${SHELL}rc script
 # known to work on bash, zsh, and ksh93
 
+COMPOSURE_DIR="~/.composure"
 
 # 'plumbing' functions
 
@@ -47,13 +48,13 @@ _add_composure_file()
   typeset comment="${4:-}"
 
   (
-    cd ~/.composure
+    cd "$COMPOSURE_DIR"
     if git rev-parse 2>/dev/null; then
       if [ ! -f $file ]; then
         printf "%s\n" "Oops! Couldn't find $file to version it for you..."
         return
       fi
-      cp $file ~/.composure/$func.inc
+      cp $file "$COMPOSURE_DIR/$func.inc"
       git add --all .
       if [ -z "$comment" ]; then
         echo -n "Git Comment: "
@@ -72,13 +73,13 @@ _transcribe ()
   typeset comment="${4:-}"
 
   if git --version >/dev/null 2>&1; then
-    if [ -d ~/.composure ]; then
+    if [ -d "$COMPOSURE_DIR" ]; then
       _add_composure_file "$func" "$file" "$operation" "$comment"
     else
       if [ "$USE_COMPOSURE_REPO" = "0" ]; then
         return  # if you say so...
       fi
-      printf "%s\n" "I see you don't have a ~/.composure repo..."
+      printf "%s\n" "I see you don't have a $COMPOSURE_DIR repo..."
       typeset input=''
       typeset valid=0
       while [ $valid != 1 ]; do
@@ -88,8 +89,8 @@ _transcribe ()
           y|yes|Y|Yes|YES)
             (
               echo 'creating git repository for your functions...'
-              mkdir ~/.composure
-              cd ~/.composure
+              mkdir "$COMPOSURE_DIR"
+              cd "$COMPOSURE_DIR"
               git init
               echo "composure stores your function definitions here" > README.txt
               git add README.txt
@@ -345,12 +346,12 @@ revise ()
   fi
 
   # populate tempfile...
-  if [ "$source" = 'env' ] || [ ! -f ~/.composure/$func.inc ]; then
+  if [ "$source" = 'env' ] || [ ! -f "$COMPOSURE_DIR/$func.inc" ]; then
     # ...with ENV if specified or not previously versioned
     typeset -f $func >> $temp
   else
     # ...or with contents of latest git revision
-    cat ~/.composure/$func.inc >> $temp
+    cat "$COMPOSURE_DIR/$func.inc" >> $temp
   fi
 
   if [ -z "$EDITOR" ]
