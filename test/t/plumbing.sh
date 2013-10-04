@@ -9,6 +9,8 @@ mkdir -p $COMPOSURE_DIR
 WVPASS [ -d $COMPOSURE_DIR ]
 cd $COMPOSURE_DIR
 git init
+git config --local user.name "test user"
+git config --local user.email "me@privacy.net"
 echo "initialize test repo" > README.txt
 git add README.txt
 git commit -m "Initial commit"
