@@ -1,7 +1,7 @@
 
-all:
-	@echo "Try: make tests"
-	@false
+TARGET = tests
+
+all: $(TARGET)
 
 runtests:
 	./runtests.sh

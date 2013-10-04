@@ -1,7 +1,6 @@
 
-all:
-	@echo "Try: make tests"
-	@false
+TARGET = tests
+all: $(TARGET)
 
 tests:
 	cd test && make tests
