@@ -5,6 +5,8 @@
 COMPOSURE_DIR="$(pwd)/composure_test"
 GIT_AUTHOR_NAME="test user"
 GIT_AUTHOR_EMAIL="me@privacy.net"
+GIT_COMMITTER_NAME="test user"
+GIT_COMMITTER_EMAIL="me@privacy.net"
 
 WVSTART "initialize test env"
 mkdir -p $COMPOSURE_DIR
