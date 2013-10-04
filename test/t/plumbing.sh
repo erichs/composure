@@ -3,14 +3,14 @@
 . ../composure.sh
 
 COMPOSURE_DIR="$(pwd)/composure_test"
+GIT_AUTHOR_NAME="test user"
+GIT_AUTHOR_EMAIL="me@privacy.net"
 
 WVSTART "initialize test env"
 mkdir -p $COMPOSURE_DIR
 WVPASS [ -d $COMPOSURE_DIR ]
 cd $COMPOSURE_DIR
 git init
-git config --local user.name "test user"
-git config --local user.email "me@privacy.net"
 echo "initialize test repo" > README.txt
 git add README.txt
 git commit -m "Initial commit"
@@ -79,51 +79,3 @@ WVPASSRC $?
 WVSTART "cleanup test env"
 rm -rf $COMPOSURE_DIR
 WVPASS [ ! -d $COMPOSURE_DIR ]
-
-# _transcribe ()
-#{
-#  typeset func="$1"
-#  typeset file="$2"
-#  typeset operation="$3"
-#  typeset comment="${4:-}"
-#
-#  if git --version >/dev/null 2>&1; then
-#    if [ -d "$COMPOSURE_DIR" ]; then
-#      _add_composure_file "$func" "$file" "$operation" "$comment"
-#    else
-#      if [ "$USE_COMPOSURE_REPO" = "0" ]; then
-#        return  # if you say so...
-#      fi
-#      printf "%s\n" "I see you don't have a $COMPOSURE_DIR repo..."
-#      typeset input=''
-#      typeset valid=0
-#      while [ $valid != 1 ]; do
-#        printf "\n%s" 'would you like to create one? y/n: '
-#        read input
-#        case $input in
-#          y|yes|Y|Yes|YES)
-#            (
-#              echo 'creating git repository for your functions...'
-#              mkdir "$COMPOSURE_DIR"
-#              cd "$COMPOSURE_DIR"
-#              git init
-#              echo "composure stores your function definitions here" > README.txt
-#              git add README.txt
-#              git commit -m 'initial commit'
-#            )
-#            # if at first you don't succeed...
-#            _transcribe "$func" "$file" "$operation"
-#            valid=1
-#            ;;
-#          n|no|N|No|NO)
-#            printf "%s\n" "ok. add 'export USE_COMPOSURE_REPO=0' to your startup script to disable this message."
-#            valid=1
-#          ;;
-#          *)
-#            printf "%s\n" "sorry, didn't get that..."
-#          ;;
-#        esac
-#      done
-#     fi
-#  fi
-#}
