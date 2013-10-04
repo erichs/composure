@@ -1,0 +1,4 @@
+two () {
+	one
+	echo 'two'
+}

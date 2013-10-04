@@ -1,0 +1,3 @@
+one () {
+	echo 'one'
+}

@@ -2,6 +2,19 @@
 . ./wvtest.sh
 . ../composure.sh
 
+COMPOSURE_DIR="$(pwd)/composure_test"
+
+WVSTART "initialize test env"
+mkdir -p $COMPOSURE_DIR
+WVPASS [ -d $COMPOSURE_DIR ]
+cd $COMPOSURE_DIR
+git init
+echo "initialize test repo" > README.txt
+git add README.txt
+git commit -m "Initial commit"
+cd -
+WVPASS [ -d "$COMPOSURE_DIR/.git" ]
+
 WVSTART "_composure_keywords"
 WVPASS [ $(_composure_keywords | wc -w) -ge 6 ]
 
@@ -24,4 +37,21 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz() { :; }
 WVPASS [ $(_longest_function_name_length) -eq 52 ]
 unset -f abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
 
+pwd
 WVSTART "_add_composure_file"
+_add_composure_file one "$(pwd)/fixtures/one.inc" Add "first test function"
+(
+  cd $COMPOSURE_DIR
+  WVPASSEQ "$(git log --format=%B -n 1 HEAD)" "Add one: first test function"
+)
+
+echo "second test function" | _add_composure_file two "$(pwd)/fixtures/two.inc" Add
+(
+  cd $COMPOSURE_DIR
+  WVPASSEQ "$(git log --format=%B -n 1 HEAD)" "Add two: second test function"
+)
+
+
+WVSTART "cleanup test env"
+rm -rf $COMPOSURE_DIR
+WVPASS [ ! -d $COMPOSURE_DIR ]
