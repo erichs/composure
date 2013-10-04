@@ -8,3 +8,4 @@ tests:
 
 clean::
 	rm -f test/*~ test/t/*~
+	rm -rf test/composure_test

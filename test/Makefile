@@ -10,4 +10,6 @@ tests:
 	./wvtestrun $(MAKE) runtests
 
 clean::
-	rm -f test/*~ test/t/*~
+	rm -f *~ t/*~
+	rm -rf composure_test
+
