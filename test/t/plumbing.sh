@@ -2,11 +2,11 @@
 . ./wvtest.sh
 . ../composure.sh
 
-COMPOSURE_DIR="$(pwd)/composure_test"
-GIT_AUTHOR_NAME="test user"
-GIT_AUTHOR_EMAIL="me@privacy.net"
-GIT_COMMITTER_NAME="test user"
-GIT_COMMITTER_EMAIL="me@privacy.net"
+export COMPOSURE_DIR="$(pwd)/composure_test"
+export GIT_AUTHOR_NAME="test user"
+export GIT_AUTHOR_EMAIL="me@privacy.net"
+export GIT_COMMITTER_NAME="test user"
+export GIT_COMMITTER_EMAIL="me@privacy.net"
 
 WVSTART "initialize test env"
 mkdir -p $COMPOSURE_DIR
