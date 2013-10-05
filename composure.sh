@@ -7,7 +7,7 @@
 # install: source this script in your ~/.profile or ~/.${SHELL}rc script
 # known to work on bash, zsh, and ksh93
 
-COMPOSURE_DIR="~/.composure"
+COMPOSURE_DIR=~/.composure
 
 # 'plumbing' functions
 
@@ -24,7 +24,7 @@ _letterpress ()
     return
   fi
 
-  printf "%-${leftwidth}s%s\n" "$leftcol" "$rightcol"
+  printf "%-*s%s\n" "$leftwidth" "$leftcol" "$rightcol"
 }
 
 _longest_function_name_length ()
@@ -124,8 +124,8 @@ _typeset_functions ()
   # we loop over the ps listing for the current process ($$), and print the last column (CMD)
   # stripping any leading hyphens bash sometimes throws in there
   typeset x ans
-  typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" $ans | sed 's/^-*//')
-  typeset shell=$(basename $this)  # e.g. /bin/bash => bash
+  typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" "$ans" | sed 's/^-*//')
+  typeset shell="${this##*/}"  # e.g. /bin/bash => bash
   case "$shell" in
     sh|bash)
       typeset -F | awk '{print $3}'
@@ -178,7 +178,7 @@ cite ()
   fi
 
   typeset keyword
-  for keyword in $*; do
+  for keyword in "$@"; do
     eval "$keyword() { :; }"
   done
 }
@@ -204,8 +204,8 @@ draft ()
   fi
 
   # aliases bind tighter than function names, disallow them
-  if [ -n "$(type -a $func 2>/dev/null | grep 'is.*alias')" ]; then
-    printf '%s\n' "sorry, $(type -a $func). please choose another name."
+  if [ -n "$(type -a "$func" 2>/dev/null | grep 'is.*alias')" ]; then
+    printf '%s\n' "sorry, $(type -a "$func"). please choose another name."
     return
   fi
 
@@ -225,8 +225,8 @@ draft ()
   eval "$func() { $cmd; }"
   typeset file=$(mktemp /tmp/draft.XXXX)
   typeset -f $func > $file
-  _transcribe $func $file draft
-  rm $file 2>/dev/null
+  _transcribe "$func" "$file" draft
+  rm "$file" 2>/dev/null
 }
 
 glossary ()
@@ -248,7 +248,7 @@ glossary ()
       fi
     fi
     typeset about="$(typeset -f $func | metafor about)"
-    _letterpress "$about" $func $maxwidth
+    _letterpress "$about" "$func" "$maxwidth"
   done
 }
 
@@ -271,7 +271,7 @@ metafor ()
   # 'grep' for the metadata keyword, and then parse/filter the matching line
 
   # grep keyword # strip trailing '|"|; # ignore thru keyword and leading '|"
-  sed -n "/$keyword / s/['\";]*$//;s/^[ 	]*$keyword ['\"]*\([^([].*\)*$/\1/p"
+  sed -n "/$keyword / s/['\";]*\$//;s/^[ 	]*$keyword ['\"]*\([^([].*\)*\$/\1/p"
 }
 
 reference ()
@@ -290,8 +290,8 @@ reference ()
 
   typeset line
 
-  typeset about="$(typeset -f $func | metafor about)"
-  _letterpress "$about" $func
+  typeset about="$(typeset -f "$func" | metafor about)"
+  _letterpress "$about" "$func"
 
   typeset author="$(typeset -f $func | metafor author)"
   if [ -n "$author" ]; then
@@ -351,7 +351,7 @@ revise ()
     typeset -f $func >> $temp
   else
     # ...or with contents of latest git revision
-    cat "$COMPOSURE_DIR/$func.inc" >> $temp
+    cat "$COMPOSURE_DIR/$func.inc" >> "$temp"
   fi
 
   if [ -z "$EDITOR" ]
@@ -359,12 +359,12 @@ revise ()
     typeset EDITOR=vi
   fi
 
-  $EDITOR $temp
-  if [ -s $temp ]; then
+  $EDITOR "$temp"
+  if [ -s "$temp" ]; then
     typeset edit='N'
 
     # source edited file
-    . $temp || edit='Y'
+    . "$temp" || edit='Y'
 
     while [ $edit = 'Y' ]; do
       echo -n "Re-edit? Y/N: "
@@ -372,18 +372,18 @@ revise ()
       case $edit in
          y|yes|Y|Yes|YES)
            edit='Y'
-           $EDITOR $temp
-           . $temp && edit='N';;
+           $EDITOR "$temp"
+           . "$temp" && edit='N';;
          *)
            edit='N';;
       esac
     done
-    _transcribe $func $temp revise
+    _transcribe "$func" "$temp" revise
   else
     # zero-length files abort revision
     printf '%s\n' 'zero-length file, revision aborted!'
   fi
-  rm $temp
+  rm "$temp"
 }
 
 write ()
@@ -400,7 +400,7 @@ if [ -z "$1" ]; then
   return
 fi
 
-echo "#!/usr/bin/env $(basename $SHELL)"
+echo "#!/usr/bin/env ${SHELL##*/}"
 
 # bootstrap metadata
 cat <<END
@@ -412,7 +412,7 @@ unset f
 END
 
 # write out function definitons
-typeset -f cite $*
+typeset -f cite "$@"
 
 cat <<END
 main() {
