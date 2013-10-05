@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/erichs/composure.png?branch=master)](https://travis-ci.org/erichs/composure)
+static analysis and automated tests: [![Build Status](https://travis-ci.org/erichs/composure.png?branch=master)](https://travis-ci.org/erichs/composure)
 
 
      e88~~\  e88~-_  888-~88e-~88e 888-~88e   e88~-_   d88~\ 888  888 888-~\  e88~~8e
