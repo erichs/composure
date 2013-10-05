@@ -6,8 +6,12 @@ all: $(TARGET)
 runtests:
 	./runtests.sh
 
+runshellcheck:
+	./runshellcheck.sh
+
 tests:
 	./wvtestrun $(MAKE) runtests
+	./wvtestrun $(MAKE) runshellcheck
 
 clean::
 	rm -f *~ t/*~
