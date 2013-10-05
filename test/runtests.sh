@@ -2,9 +2,15 @@
 
 # run code quality metrics
 echo "Testing \"code quality\" with shellcheck.net in ../composure.sh:"
-typeset metricfile=shellcheck.out
+metricfile=shellcheck.out
+data=shellcheck.data
+which python
+which curl
+
 curl -s --data-urlencode script="$(cat ../composure.sh)" \
-  www.shellcheck.net/shellcheck.php | python -mjson.tool > $metricfile
+  www.shellcheck.net/shellcheck.php > $data
+cat $data
+cat $data | python -mjson.tool > $metricfile
 cat $metricfile
 
 # check for shellcheck.net errors
