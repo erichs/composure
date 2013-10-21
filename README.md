@@ -36,10 +36,10 @@ shell's profile or rc file.
 On Bash:
 
 ```bash
-    $ cd /your/favorite/directory
-    $ curl -L http://git.io/composure > composure.sh
-    $ chmod +x composure.sh
-    $ echo "source $(pwd)/composure.sh" >> ~/.bashrc   # or, ~/.bash_profile on osx
+    cd /your/favorite/directory
+    curl -L http://git.io/composure > composure.sh
+    chmod +x composure.sh
+    echo "source $(pwd)/composure.sh" >> ~/.bashrc   # or, ~/.bash_profile on osx
 ```
 
 ## Craft - Draft - Revise - Write
@@ -193,14 +193,17 @@ To display apidoc-style help for a function, use 'reference ()'.
 
 ## Git integration
 
-If you already use git, installing composure will initialize a ~/.composure
+If you already use git, installing composure will initialize a ~/.local/composure
 repository, and store and version your functions there. Just use 'draft ()' and
 'revise ()', they automatically version for you.
+
+Composure supports the [XDG Base Directory](http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html)
+specification, and will respect your local XDG_DATA_HOME environment variable.
 
 Why do this?
 
  * the latest version of any function you've composed may always be sourced from
-   your ~/.composure repo
+   your composure repo
  * never throw away code--keep your one-off functions in your composure 'junk
    drawer', and grep through it later for long-forgotten gems
  * every version of every function you write is always
@@ -209,12 +212,12 @@ Why do this?
 try:
 
 ```bash
-  $ ls -l | awk '{print $1 " " $3 " " $5  " " $9}'
-  $ draft lsl
-  $ unset -f lsl  # or, open a new terminal...
-  $ lsl  # displays: lsl: command not found
-  $ source ~/.composure/lsl.inc
-  $ lsl  # joy!
+  ls -l | awk '{print $1 " " $3 " " $5  " " $9}'
+  draft lsl
+  unset -f lsl  # or, open a new terminal...
+  lsl  # displays: lsl: command not found
+  source ~/.local/composure/lsl.inc
+  lsl  # joy!
 ```
 
 # Credits
@@ -231,8 +234,3 @@ text](http://mitpress.mit.edu/sicp/full-text/book/book.html):
 ## Known Issues
 
 'glossary ()' and 'reference ()' do not support nested functions with metadata.
-
-if the SHELL environment variable is unset or incorrect for your current shell,
-typeset_functions() will not work correctly. This will negatively affect
-metadata retrieval with glossary(). Please manually export the correct value of
-SHELL if you encounter difficulties with metadata retrieval.
