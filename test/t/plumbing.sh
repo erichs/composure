@@ -29,7 +29,8 @@ WVPASSEQ "$(_letterpress foo bar 10)" "bar       foo"
 WVPASSEQ "$(_letterpress foo bar)" "bar                 foo"
 
 WVSTART "_typeset_functions"
-typeset count=$(_typeset_functions | wc -l)
+typeset count
+count=$(_typeset_functions | wc -l)
 WVPASS [ $count -gt 1 ]
 ___test_typeset_functions () { :; }
 WVPASS [ $(_typeset_functions | wc -l) -gt $count ]
@@ -40,6 +41,9 @@ WVPASS [ $(_longest_function_name_length) -gt 0 ]
 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz() { :; }
 WVPASS [ $(_longest_function_name_length) -eq 52 ]
 unset -f abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
+
+# fake out _get_composure_dir
+_get_composure_dir() { echo $COMPOSURE_DIR; }
 
 WVSTART "_add_composure_file"
 _add_composure_file one "$(pwd)/fixtures/one.inc" Add "first test function"
