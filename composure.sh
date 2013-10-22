@@ -204,7 +204,6 @@ draft ()
 
   typeset func=$1
   typeset num=$2
-  typeset cmd
 
   if [ -z "$func" ]; then
     printf '%s\n' 'missing parameter(s)'
@@ -218,23 +217,28 @@ draft ()
     return
   fi
 
+  typeset cmd
   if [ -z "$num" ]; then
-    # parse last command from fc output
-    # some versions of 'fix command, fc' need corrective lenses...
-    typeset myopic=$(fc -ln -1 | grep draft)
     typeset lines=1
-    if [ -n "$myopic" ]; then
-      lines=2
-    fi
+    # some versions of 'fix command, fc' need corrective lenses...
+    fc -ln -1 | grep -q draft && lines=2
+    # parse last command from fc output
     cmd=$(fc -ln -$lines | head -1 | sed 's/^[[:blank:]]*//')
   else
     # parse command from history line number
     cmd=$(eval "history | grep '^[[:blank:]]*$num' | head -1" | sed 's/^[[:blank:][:digit:]]*//')
   fi
-  eval "$func() { $cmd; }"
+  eval "$func() {
+  about ''
+  param ''
+  example ''
+  group ''
+
+  $cmd;
+}"
   typeset file=$(mktemp /tmp/draft.XXXX)
   typeset -f $func > $file
-  _transcribe "$func" "$file" draft
+  _transcribe "$func" "$file" Draft
   rm "$file" 2>/dev/null
 }
 
@@ -388,7 +392,7 @@ revise ()
            edit='N';;
       esac
     done
-    _transcribe "$func" "$temp" revise
+    _transcribe "$func" "$temp" Revise
   else
     # zero-length files abort revision
     printf '%s\n' 'zero-length file, revision aborted!'
