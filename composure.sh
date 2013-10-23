@@ -238,8 +238,9 @@ draft ()
 }"
   typeset file=$(mktemp /tmp/draft.XXXX)
   typeset -f $func > $file
-  _transcribe "$func" "$file" Draft
+  _transcribe "$func" "$file" Draft "initial draft"
   rm "$file" 2>/dev/null
+  revise $func
 }
 
 glossary ()
