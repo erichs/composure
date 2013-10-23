@@ -45,6 +45,13 @@ unset -f abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
 # fake out _get_composure_dir
 _get_composure_dir() { echo $COMPOSURE_DIR; }
 
+WVSTART "_get_author_name"
+cd $(_get_composure_dir) && git config --local user.name 'local user' && cd -
+unset GIT_AUTHOR_NAME  # use local git config if ENV var is unset
+WVPASSEQ "$(_get_author_name)" "local user"
+export GIT_AUTHOR_NAME="test user"
+WVPASSEQ "$(_get_author_name)" "test user"
+
 WVSTART "_add_composure_file"
 _add_composure_file one "$(pwd)/fixtures/one.inc" Add "first test function"
 (

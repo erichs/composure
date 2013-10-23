@@ -18,6 +18,18 @@ _get_composure_dir ()
   fi
 }
 
+_get_author_name ()
+{
+  typeset name localname
+  localname="$(git --git-dir "$(_get_composure_dir)/.git" config --get user.name)"
+  for name in "$GIT_AUTHOR_NAME" "$localname"; do
+    if [ -n "$name" ]; then
+      echo $name
+      break
+    fi
+  done
+}
+
 _composure_keywords ()
 {
   echo "about author example group param version"
@@ -229,6 +241,7 @@ draft ()
     cmd=$(eval "history | grep '^[[:blank:]]*$num' | head -1" | sed 's/^[[:blank:][:digit:]]*//')
   fi
   eval "$func() {
+  author '$(_get_author_name)'
   about ''
   param ''
   example ''
