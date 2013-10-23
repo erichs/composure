@@ -42,6 +42,13 @@ On Bash:
     echo "source $(pwd)/composure.sh" >> ~/.bashrc   # or, ~/.bash_profile on osx
 ```
 
+Users upgrading from a version prior to 1.1.0 need to execute the following commands, as the directory for composure's local repo has changed:
+
+```bash
+  mkdir ~/.local 2>/dev/null
+  mv ~/.composure ~/.local/composure
+```
+
 ## Craft - Draft - Revise - Write
 
 <img src="http://yuml.me/47fcf7e2" />

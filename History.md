@@ -1,3 +1,10 @@
+1.1.0 / 2013-10-23
+=================
+* Auto-revise drafted functions
+* Populate author metadata on draft
+* Use tpope-style commit msgs
+* Respect XDG_DATA_HOME
+
 1.0.4 / 2013-08-30
 ==================
 
