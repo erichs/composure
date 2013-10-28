@@ -164,7 +164,7 @@ _zsh_shell_check ()
   #
   # we can not use the $SHELL variable because it is set from a login shell, so
   # starting a bash shell inside your zsh login shell "brings" all the previously
-  # environmet variables
+  # environment variables
   # example:
   #
   # zsh-4 $ echo $SHELL
@@ -198,7 +198,7 @@ _zsh_shell_option_check ()
 
     for zsh_option in ${_composure_zsh_options[@]}; do
 
-      if $(setopt | command grep -qw "$zsh_option"); then
+      if $( setopt | command grep -qw "$zsh_option" ); then
 
         # since we need to invert the option (starts with no),
         # we must check first check if it actually starts with `no`
