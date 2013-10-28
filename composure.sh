@@ -193,9 +193,6 @@ _zsh_shell_option_check ()
     typeset -x _composure_zsh_options
     _composure_zsh_options="$@"
 
-    # remove the leading space (useful when there's only one argument)
-    _composure_zsh_options=${_composure_zsh_options##([[:space:]])}
-
     for zsh_option in ${_composure_zsh_options[@]}; do
 
       if $( setopt | command grep -qw "$zsh_option" ); then
