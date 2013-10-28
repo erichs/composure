@@ -158,6 +158,78 @@ _typeset_functions ()
   esac
 }
 
+_zsh_shell_check ()
+{
+  # see above
+  #
+  # we can not use the $SHELL variable because it is set from a login shell, so
+  # starting a bash shell inside your zsh login shell "brings" all the previously
+  # environmet variables
+  # example:
+  #
+  # zsh-4 $ echo $SHELL
+  # /bin/zsh
+  # zsh-4 $ sh
+  # sh-4.2$ echo $SHELL
+  # /bin/zsh
+
+  typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" "$ans" | sed 's/^-*//')
+  typeset shell="${this##*/}"  # e.g. /bin/bash => bash
+
+  if [ "$shell" = "zsh" ]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+_zsh_shell_option_check ()
+{
+  # checks for problematic known options (like noclobber) and invert them
+
+  if _zsh_shell_check; then
+
+    # we need to expose the variable for a while
+    typeset -x _composure_zsh_options
+    _composure_zsh_options="$@"
+
+    # remove the leading space (useful when there's only one argument)
+    _composure_zsh_options=${_composure_zsh_options##([[:space:]])}
+
+    for zsh_option in ${_composure_zsh_options[@]}; do
+
+      if $(setopt | command grep -qw "$zsh_option"); then
+
+        # since we need to invert the option (starts with no),
+        # we must check first check if it actually starts with `no`
+        # for example:
+        # noclobber -> setopt clobber
+        # interactivecomments -> nointeractivecomments
+
+        if [ "$zsh_option" = "${zsh_option#no}" ]; then
+          zsh_option=no${zsh_option} # add no
+        else
+          zsh_option=${zsh_option#no} # remove no
+        fi
+
+        setopt $zsh_option
+
+      fi
+
+    done
+  fi
+}
+
+_reenable_zsh_options ()
+{
+  # restablish the zsh option previous state
+  if _zsh_shell_check; then
+    for zsh_option in ${_composure_zsh_options[@]}; do
+      setopt $zsh_option
+    done
+    unset _composure_zsh_options
+  fi
+}
 
 # bootstrap metadata keywords for porcelain functions
 
