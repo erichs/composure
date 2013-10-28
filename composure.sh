@@ -301,6 +301,8 @@ draft ()
     return
   fi
 
+  _zsh_shell_option_check noclobber
+
   typeset cmd
   if [ -z "$num" ]; then
     typeset lines=1
@@ -325,6 +327,7 @@ draft ()
   typeset -f $func > $file
   _transcribe "$func" "$file" Draft "initial draft"
   rm "$file" 2>/dev/null
+  _reenable_zsh_options
   revise $func
 }
 
@@ -445,6 +448,7 @@ revise ()
   fi
 
   typeset composure_dir=$(_get_composure_dir)
+  _zsh_shell_option_check noclobber
   # populate tempfile...
   if [ "$source" = 'env' ] || [ ! -f "$composure_dir/$func.inc" ]; then
     # ...with ENV if specified or not previously versioned
@@ -484,6 +488,7 @@ revise ()
     printf '%s\n' 'zero-length file, revision aborted!'
   fi
   rm "$temp"
+  _reenable_zsh_options
 }
 
 write ()
