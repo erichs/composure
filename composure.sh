@@ -193,9 +193,9 @@ _zsh_shell_option_check ()
     typeset -x _composure_zsh_options
     _composure_zsh_options="$@"
 
-    for zsh_option in ${_composure_zsh_options[@]}; do
+    for zsh_option in "${_composure_zsh_options[@]}"; do
 
-      if $( setopt | command grep -qw "$zsh_option" ); then
+      if setopt | command grep -qw "$zsh_option"; then
 
         # since we need to invert the option (starts with no),
         # we must check first check if it actually starts with `no`
@@ -221,7 +221,7 @@ _reenable_zsh_options ()
 {
   # restablish the zsh option previous state
   if _zsh_shell_check; then
-    for zsh_option in ${_composure_zsh_options[@]}; do
+    for zsh_option in "${_composure_zsh_options[@]}"; do
       setopt $zsh_option
     done
     unset _composure_zsh_options
