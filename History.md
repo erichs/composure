@@ -1,5 +1,9 @@
+1.1.1 / 2013-10-29
+==================
+* Fix issue with zsh noclobber option
+
 1.1.0 / 2013-10-23
-=================
+==================
 * Auto-revise drafted functions
 * Populate author metadata on draft
 * Use tpope-style commit msgs
