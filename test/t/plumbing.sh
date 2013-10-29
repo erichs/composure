@@ -38,9 +38,6 @@ unset -f ___test_typeset_functions
 
 WVSTART "_longest_function_name_length"
 WVPASS [ $(_longest_function_name_length) -gt 0 ]
-abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz() { :; }
-WVPASS [ $(_longest_function_name_length) -eq 52 ]
-unset -f abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
 
 # fake out _get_composure_dir
 _get_composure_dir() { echo $COMPOSURE_DIR; }
@@ -51,6 +48,10 @@ unset GIT_AUTHOR_NAME  # use local git config if ENV var is unset
 WVPASSEQ "$(_get_author_name)" "local user"
 export GIT_AUTHOR_NAME="test user"
 WVPASSEQ "$(_get_author_name)" "test user"
+
+WVSTART "_temp_filename_for"
+WVPASS [ -n "$(_temp_filename_for test)" ]
+WVPASS [ ! -f "$(_temp_filename_for test)" ]
 
 WVSTART "_add_composure_file"
 _add_composure_file one "$(pwd)/fixtures/one.inc" Add "first test function"

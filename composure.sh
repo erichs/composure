@@ -59,7 +59,14 @@ _longest_function_name_length ()
   END{ print maxlength}'
 }
 
-_add_composure_file()
+_temp_filename_for ()
+{
+  typeset file=$(mktemp /tmp/$1.XXXX)
+  rm $file 2>/dev/null   # ensure file is unlinked prior to use
+  echo $file
+}
+
+_add_composure_file ()
 {
   typeset func="$1"
   typeset file="$2"
@@ -249,7 +256,7 @@ draft ()
 
   $cmd;
 }"
-  typeset file=$(mktemp /tmp/draft.XXXX)
+  typeset file=$(_temp_filename_for draft)
   typeset -f $func > $file
   _transcribe "$func" "$file" Draft "initial draft"
   rm "$file" 2>/dev/null
@@ -364,8 +371,6 @@ revise ()
   fi
 
   typeset func=$1
-  typeset temp=$(mktemp /tmp/revise.XXXX)
-
   if [ -z "$func" ]; then
     printf '%s\n' 'missing parameter(s)'
     reference revise
@@ -373,13 +378,14 @@ revise ()
   fi
 
   typeset composure_dir=$(_get_composure_dir)
+  typeset temp=$(_temp_filename_for revise)
   # populate tempfile...
   if [ "$source" = 'env' ] || [ ! -f "$composure_dir/$func.inc" ]; then
     # ...with ENV if specified or not previously versioned
-    typeset -f $func >> $temp
+    typeset -f $func > $temp
   else
     # ...or with contents of latest git revision
-    cat "$composure_dir/$func.inc" >> "$temp"
+    cat "$composure_dir/$func.inc" > "$temp"
   fi
 
   if [ -z "$EDITOR" ]
@@ -455,7 +461,7 @@ END
 : <<EOF
 License: The MIT License
 
-Copyright © 2012 Erich Smith
+Copyright © 2012, 2013 Erich Smith
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this
 software and associated documentation files (the "Software"), to deal in the Software
