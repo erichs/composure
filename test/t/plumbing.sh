@@ -90,6 +90,20 @@ WVPASSRC $?
 )
 WVPASSRC $?
 
+WVSTART "_load_composed_functions"
+echo "testload_fn() { echo loaded; }" > $COMPOSURE_DIR/loadtest.inc
+testload_fn
+WVFAILRC $?  # should not be already loaded
+
+export LOAD_COMPOSED_FUNCTIONS=0
+_load_composed_functions
+testload_fn
+WVFAILRC $?  # should respect LOAD_COMPOSED_FUNCTIONS setting...
+
+export LOAD_COMPOSED_FUNCTIONS=1
+_load_composed_functions
+WVPASSEQ "$(testload_fn)" "loaded"
+
 WVSTART "cleanup test env"
 rm -rf $COMPOSURE_DIR
 WVPASS [ ! -d $COMPOSURE_DIR ]

@@ -165,6 +165,17 @@ _typeset_functions ()
   esac
 }
 
+_load_composed_functions () {
+  if [ "$LOAD_COMPOSED_FUNCTIONS" = "0" ]; then
+    return  # if you say so...
+  fi
+
+  typeset inc=
+  for inc in $(_get_composure_dir)/*.inc; do
+    . $inc
+  done
+}
+
 
 # bootstrap metadata keywords for porcelain functions
 
@@ -457,6 +468,13 @@ main() {
 main \$*
 END
 }
+
+
+# load previously composed functions into shell
+# you may disable this by adding the following line to your startup script:
+# export LOAD_COMPOSED_FUNCTIONS=0
+
+_load_composed_functions
 
 : <<EOF
 License: The MIT License
