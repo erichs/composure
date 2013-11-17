@@ -1,3 +1,7 @@
+1.2.0 / 2013-11-17
+==================
+* Auto-load composed functions
+
 1.1.1 / 2013-10-29
 ==================
 * Fix issue with zsh noclobber option

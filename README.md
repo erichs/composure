@@ -216,15 +216,12 @@ Why do this?
  * every version of every function you write is always
    available to you via basic git commands
 
-try:
+## Persistent access
 
-```bash
-  ls -l | awk '{print $1 " " $3 " " $5  " " $9}'
-  draft lsl
-  unset -f lsl  # or, open a new terminal...
-  lsl  # displays: lsl: command not found
-  source ~/.local/composure/lsl.inc
-  lsl  # joy!
+Draft or revise a function, and the latest version is automatically sourced into your current shell environment. By default, composure automatically sources all of your composed functions when you source the composure.sh script. If you are concerned about shell startup time, have many hundreds of versioned shell functions, or otherwise want to control which functions are loaded from your composure repository, you may disable the default behavior by adding the following line to your shell's startup script:
+
+```shell
+export LOAD_COMPOSED_FUNCTIONS=0
 ```
 
 # Credits
