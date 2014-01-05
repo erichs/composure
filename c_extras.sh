@@ -1,16 +1,54 @@
-# Second-order functions for composure
-
-composed_functions ()
-{
-    about 'list all functions stored in ~/.composure repository'
-    group 'composure'
-
-    typeset f
-    for f in ~/.composure/*.inc
-    do
-        echo ${f%.inc}
-    done | awk -F'/' '{print $NF}'
+_basename_no_extension () {
+  sed -e 's/^.*\/\(.*\)\.inc$/\1/'
 }
+
+_composure_functions () {
+  _list_composure_files | _basename_no_extension
+}
+
+_load_tab_completions () {
+  # support tab completion for 'revise' command
+  # you may disable this by adding the following line to your shell startup:
+  # export COMPOSURE_TAB_COMPLETION=0
+
+  if [ "$COMPOSURE_TAB_COMPLETION" = "0" ]; then
+    return  # if you say so...
+  fi
+
+  case "$(_shell)" in
+    zsh)
+      read -r -d '' SCRIPT <<ZSHDATA
+_zsh_revise_complete () {
+   typeset word completions
+   word="\$1"
+   completions="\$(_composure_functions)"
+   reply=( "\${(ps:\n:)completions}" )
+}
+compctl -K _zsh_revise_complete revise
+ZSHDATA
+      eval "$SCRIPT"
+      unset SCRIPT
+      ;;
+    bash)
+      read -r -d '' SCRIPT <<BASHDATA
+_bash_revise_complete () {
+  typeset cur
+  cur=\${COMP_WORDS[COMP_CWORD]}
+  COMPREPLY=( \$(compgen -W "\$(_composure_functions)" -- \$cur) )
+  return 0
+}
+complete -F _bash_revise_complete revise
+BASHDATA
+      eval "$SCRIPT"
+      unset SCRIPT
+      ;;
+    *)
+      echo "composure tab completions unavailable"
+      ;;
+  esac
+}
+
+# Second-order functions for composure
 
 findgroup ()
 {
@@ -69,19 +107,7 @@ recompose ()
     example '$ load myfunc'
     group 'composure'
 
-    source ~/.composure/$1.inc
-}
-
-recompose_all ()
-{
-    about 'loads all stored functions from ~/.composure repo'
-    group 'composure'
-
-    typeset func
-    for func in $(composed_functions)
-    do
-        load $func
-    done
+    . $(_get_composure_dir)/$1.inc
 }
 
 unique_metafor ()
@@ -98,3 +124,20 @@ unique_metafor ()
     cat $file | sort | uniq
     rm $file 2>/dev/null
 }
+
+compost () {
+	about 'delete function stored in composure repo'
+	param '1: name of function'
+	example '$ compost myfunc'
+	group 'composure'
+
+  typeset func=$1
+  [ -z "$func" ] && echo "you must specify a function name!" && return 1
+
+  (
+	  cd $(_get_composure_dir)
+    git rm "$func.inc" && git commit -m "Delete function $func"
+  )
+}
+
+_load_tab_completions
