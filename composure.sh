@@ -9,6 +9,11 @@
 
 # 'plumbing' functions
 
+_bootstrap_composure() {
+  _generate_metadata_functions
+  _load_composed_functions
+}
+
 _get_composure_dir ()
 {
   if [ -n "$XDG_DATA_HOME" ]; then
@@ -146,15 +151,7 @@ _typeset_functions ()
   # unfortunately, there does not seem to be a easy, portable way to list just the
   # names of the defined shell functions...
 
-  # first, determine our shell:
-  typeset shell
-  # here's a hack I modified from a StackOverflow post:
-  # we loop over the ps listing for the current process ($$), and print the last column (CMD)
-  # stripping any leading hyphens bash sometimes throws in there
-  typeset x ans
-  typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" "$ans" | sed 's/^-*//')
-  typeset shell="${this##*/}"  # e.g. /bin/bash => bash
-  case "$shell" in
+  case "$(_shell)" in
     sh|bash)
       typeset -F | awk '{print $3}'
       ;;
@@ -165,25 +162,43 @@ _typeset_functions ()
   esac
 }
 
+_shell () {
+  # here's a hack I modified from a StackOverflow post:
+  # get the ps listing for the current process ($$), and print the last column (CMD)
+  # stripping any leading hyphens shells sometimes throw in there
+  typeset this=$(ps -p $$ | tail -1 | awk '{print $4}' | sed 's/^-*//')
+  echo "${this##*/}"  # e.g. /bin/bash => bash
+}
+
+_generate_metadata_functions() {
+  typeset f
+  for f in $(_composure_keywords)
+  do
+    eval "$f() { :; }"
+  done
+}
+
+_list_composure_files () {
+  typeset f
+  for f in $(_get_composure_dir)/*.inc; do
+    echo $f
+  done
+}
+
 _load_composed_functions () {
+  # load previously composed functions into shell
+  # you may disable this by adding the following line to your shell startup:
+  # export LOAD_COMPOSED_FUNCTIONS=0
+
   if [ "$LOAD_COMPOSED_FUNCTIONS" = "0" ]; then
     return  # if you say so...
   fi
 
-  typeset inc=
-  for inc in $(_get_composure_dir)/*.inc; do
+  typeset inc
+  for inc in $(_list_composure_files); do
     . $inc
   done
 }
-
-
-# bootstrap metadata keywords for porcelain functions
-
-for f in $(_composure_keywords)
-do
-  eval "$f() { :; }"
-done
-unset f
 
 
 # 'porcelain' functions
@@ -258,7 +273,7 @@ draft ()
     # parse command from history line number
     cmd=$(eval "history | grep '^[[:blank:]]*$num' | head -1" | sed 's/^[[:blank:][:digit:]]*//')
   fi
-  eval "$func() {
+  eval "function $func {
   author '$(_get_author_name)'
   about ''
   param ''
@@ -269,7 +284,7 @@ draft ()
 }"
   typeset file=$(_temp_filename_for draft)
   typeset -f $func > $file
-  _transcribe "$func" "$file" Draft "initial draft"
+  _transcribe "$func" "$file" Draft "Initial draft"
   rm "$file" 2>/dev/null
   revise $func
 }
@@ -469,12 +484,7 @@ main \$*
 END
 }
 
-
-# load previously composed functions into shell
-# you may disable this by adding the following line to your startup script:
-# export LOAD_COMPOSED_FUNCTIONS=0
-
-_load_composed_functions
+_bootstrap_composure
 
 : <<EOF
 License: The MIT License

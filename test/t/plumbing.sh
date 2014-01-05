@@ -28,6 +28,9 @@ WVPASSEQ "$(_letterpress foo bar)" "bar                 foo"
 WVPASSEQ "$(_letterpress foo bar 10)" "bar       foo"
 WVPASSEQ "$(_letterpress foo bar)" "bar                 foo"
 
+WVSTART "_shell"
+WVPASSEQ "$(_shell)" "$(basename $SHELL)"
+
 WVSTART "_typeset_functions"
 typeset count
 count=$(_typeset_functions | wc -l)
