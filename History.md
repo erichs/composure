@@ -1,3 +1,8 @@
+1.2.1 / 2014-01-05
+==================
+* Tab completion for revise(), new compost() func
+* Improve shell determination and bootstrapping sequence
+
 1.2.0 / 2013-11-17
 ==================
 * Auto-load composed functions
