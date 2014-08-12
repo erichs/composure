@@ -19,7 +19,7 @@ static analysis and automated tests: [![Build Status](https://travis-ci.org/eric
 
 ## Demo!
 
-[Composing a simple network monitoring script](http://ascii.io/a/476) (4 minutes)
+[Composing a simple network monitoring script](http://asciinema.org/a/476) (4 minutes)
 
 ## Compatibility
 
