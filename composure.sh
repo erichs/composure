@@ -200,6 +200,14 @@ _load_composed_functions () {
   done
 }
 
+_strip_trailing_whitespace () {
+  sed -e 's/ \+$//'
+}
+
+_strip_semicolons () {
+  sed -e 's/;$//'
+}
+
 
 # 'porcelain' functions
 
@@ -283,7 +291,7 @@ draft ()
   $cmd;
 }"
   typeset file=$(_temp_filename_for draft)
-  typeset -f $func > $file
+  typeset -f $func | _strip_trailing_whitespace | _strip_semicolons > $file
   _transcribe "$func" "$file" Draft "Initial draft"
   rm "$file" 2>/dev/null
   revise $func
@@ -508,4 +516,3 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTIO
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 EOF
-
