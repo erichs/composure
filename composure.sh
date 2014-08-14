@@ -179,10 +179,7 @@ _generate_metadata_functions() {
 }
 
 _list_composure_files () {
-  typeset f
-  for f in $(_get_composure_dir)/*.inc; do
-    echo $f
-  done
+  find "$(_get_composure_dir)" -maxdepth 1 -name '*.inc'
 }
 
 _load_composed_functions () {
