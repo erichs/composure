@@ -64,7 +64,7 @@ _add_composure_file one "$(pwd)/fixtures/one.inc" Add "first test function"
 )
 WVPASSRC $?
 
-echo "second test function" | _add_composure_file two "$(pwd)/fixtures/two.inc" Add
+_add_composure_file two "$(pwd)/fixtures/two.inc" Add "second test function"
 (
   cd $COMPOSURE_DIR
   WVPASSEQ "$(git log --format=%B -n 1 HEAD)" "Add two: second test function"
