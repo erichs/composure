@@ -89,8 +89,7 @@ _add_composure_file ()
       cp "$file" "$composure_dir/$func.inc"
       git add --all .
       if [ -z "$comment" ]; then
-        echo -n "Git Comment: "
-        read comment
+        read -e -p 'Git Comment: ' comment
       fi
       git commit -m "$operation $func: $comment"
     fi
