@@ -71,6 +71,17 @@ _temp_filename_for ()
   echo $file
 }
 
+_prompt_cmd ()
+{
+  typeset prompt="$1"
+  case "$(_shell)" in
+    bash)
+      echo "read -e -p '$prompt'";;
+    *)
+      echo "echo -n '$prompt'; read";;
+  esac
+}
+
 _add_composure_file ()
 {
   typeset func="$1"
@@ -89,7 +100,7 @@ _add_composure_file ()
       cp "$file" "$composure_dir/$func.inc"
       git add --all .
       if [ -z "$comment" ]; then
-        read -e -p 'Git Comment: ' comment
+        eval "$(_prompt_cmd 'Git Comment: ') comment"
       fi
       git commit -m "$operation $func: $comment"
     fi
