@@ -6,7 +6,6 @@ ZSH=$(which zsh 2>/dev/null)
 BASH=$(which bash 2>/dev/null)
 
 # run wvtests against available shells
-typeset test shell
 for test in t/*.sh; do
   for shell in $BASH $KSH $ZSH; do
     TESTFILE="$test" SHELL=$shell $shell $test

@@ -1,3 +1,10 @@
+1.2.2 / 2015-01-16
+==================
+various fixes, including contributions from:
+* @nilbus
+* @martinlauer
+* @DrVanScott
+
 1.2.1 / 2014-01-05
 ==================
 * Tab completion for revise(), new compost() func
