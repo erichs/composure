@@ -282,9 +282,8 @@ draft ()
 
   typeset cmd
   if [ -z "$num" ]; then
-    typeset lines=1
     # some versions of 'fix command, fc' need corrective lenses...
-    (fc -ln -1 | grep -q draft) && lines=2
+    typeset lines=$(fc -ln -1 | grep -q draft && echo 2 || echo 1)
     # parse last command from fc output
     cmd=$(fc -ln -$lines | head -1 | sed 's/^[[:blank:]]*//')
   else
