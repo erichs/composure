@@ -1,5 +1,8 @@
 language: c
 script: make tests
+os:
+  - linux
+  - osx
 branches:
   only:
     - testing
