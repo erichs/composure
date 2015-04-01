@@ -1,7 +1,7 @@
 # composure - by erichs
 # light-hearted functions for intuitive shell programming
 
-# version: 1.2.2
+# version: 1.2.3
 # latest source available at http://git.io/composure
 
 # install: source this script in your ~/.profile or ~/.${SHELL}rc script
@@ -17,9 +17,9 @@ _bootstrap_composure() {
 _get_composure_dir ()
 {
   if [ -n "$XDG_DATA_HOME" ]; then
-    echo $XDG_DATA_HOME/composure
+    echo "$XDG_DATA_HOME/composure"
   else
-    echo $HOME/.local/composure
+    echo "$HOME/.local/composure"
   fi
 }
 
@@ -29,7 +29,7 @@ _get_author_name ()
   localname="$(git --git-dir "$(_get_composure_dir)/.git" config --get user.name)"
   for name in "$GIT_AUTHOR_NAME" "$localname"; do
     if [ -n "$name" ]; then
-      echo $name
+      echo "$name"
       break
     fi
   done
@@ -66,9 +66,9 @@ _longest_function_name_length ()
 
 _temp_filename_for ()
 {
-  typeset file=$(mktemp /tmp/$1.XXXX)
-  rm $file 2>/dev/null   # ensure file is unlinked prior to use
-  echo $file
+  typeset file=$(mktemp "/tmp/$1.XXXX")
+  rm "$file" 2>/dev/null   # ensure file is unlinked prior to use
+  echo "$file"
 }
 
 _prompt ()
@@ -206,7 +206,7 @@ _load_composed_functions () {
 
   typeset inc
   for inc in $(_list_composure_files); do
-    . $inc
+    . "$inc"
   done
 }
 
@@ -300,10 +300,10 @@ draft ()
   $cmd;
 }"
   typeset file=$(_temp_filename_for draft)
-  typeset -f $func | _strip_trailing_whitespace | _strip_semicolons > $file
+  typeset -f "$func" | _strip_trailing_whitespace | _strip_semicolons > "$file"
   _transcribe "$func" "$file" Draft "Initial draft"
   rm "$file" 2>/dev/null
-  revise $func
+  revise "$func"
 }
 
 glossary ()
@@ -318,14 +318,19 @@ glossary ()
   typeset maxwidth=$(_longest_function_name_length | awk '{print $1 + 5}')
 
   for func in $(_typeset_functions); do
-    if [ -n "$targetgroup" ]; then
-      typeset group="$(typeset -f $func | metafor group)"
+
+    if [ "X${targetgroup}X" != "XX" ]; then
+      typeset group="$(typeset -f -- $func | metafor group)"
       if [ "$group" != "$targetgroup" ]; then
         continue  # skip non-matching groups, if specified
       fi
     fi
-    typeset about="$(typeset -f $func | metafor about)"
-    _letterpress "$about" "$func" "$maxwidth"
+    typeset about="$(typeset -f -- $func | metafor about)"
+    typeset aboutline=
+    echo "$about" | fmt | while read aboutline; do
+      _letterpress "$aboutline" "$func" "$maxwidth"
+      func=" " # only display function name once
+    done
   done
 }
 
@@ -489,7 +494,7 @@ unset f
 END
 
 # write out function definitons
-typeset -f cite "$@"
+typeset -f "cite $@"
 
 cat <<END
 main() {
