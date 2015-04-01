@@ -318,14 +318,14 @@ glossary ()
   typeset maxwidth=$(_longest_function_name_length | awk '{print $1 + 5}')
 
   for func in $(_typeset_functions); do
-    if [ -n "$targetgroup" ]; then
-      typeset group="$(typeset -f $func | metafor group)"
+
+    if [ "X${targetgroup}X" != "XX" ]; then
+      typeset group="$(typeset -f -- $func | metafor group)"
       if [ "$group" != "$targetgroup" ]; then
         continue  # skip non-matching groups, if specified
       fi
     fi
-    typeset about="$(typeset -f $func | metafor about)"
-    _letterpress "$about" "$func" "$maxwidth"
+    typeset about="$(typeset -f -- $func | metafor about)"
   done
 }
 
