@@ -1,7 +1,7 @@
 # composure - by erichs
 # light-hearted functions for intuitive shell programming
 
-# version: 1.2.2
+# version: 1.2.3
 # latest source available at http://git.io/composure
 
 # install: source this script in your ~/.profile or ~/.${SHELL}rc script

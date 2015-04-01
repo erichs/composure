@@ -1,3 +1,9 @@
+1.2.3 / 2015-04-01
+==================
+* Minor fixes for latest shellcheck.net codes
+* Better wrapping for long about metadata
+* Support leading hyphens in function names
+
 1.2.2 / 2015-01-16
 ==================
 various fixes, including contributions from:
