@@ -326,6 +326,11 @@ glossary ()
       fi
     fi
     typeset about="$(typeset -f -- $func | metafor about)"
+    typeset aboutline=
+    echo "$about" | fmt | while read aboutline; do
+      _letterpress "$aboutline" "$func" "$maxwidth"
+      func=" " # only display function name once
+    done
   done
 }
 
