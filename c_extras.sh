@@ -1,3 +1,5 @@
+#!/bin/bash
+
 _basename_no_extension () {
   sed -e 's/^.*\/\(.*\)\.inc$/\1/'
 }
@@ -95,9 +97,9 @@ overview ()
         printf '%s\n' "${gfile##*.}:";
         cat $gfile;
         printf '\n';
-        rm $gfile 2> /dev/null;
+        command rm $gfile 2> /dev/null;
     done | less
-    rm $grouplist 2> /dev/null
+    command rm $grouplist 2> /dev/null
 }
 
 recompose ()
@@ -122,7 +124,7 @@ unique_metafor ()
     typeset file=$(mktemp /tmp/composure.XXXX)
     typeset -f | metafor $keyword >> $file
     cat $file | sort | uniq
-    rm $file 2>/dev/null
+    command rm $file 2>/dev/null
 }
 
 compost () {
