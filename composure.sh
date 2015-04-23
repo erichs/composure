@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # composure - by erichs
 # light-hearted functions for intuitive shell programming
 
@@ -67,7 +69,7 @@ _longest_function_name_length ()
 _temp_filename_for ()
 {
   typeset file=$(mktemp "/tmp/$1.XXXX")
-  rm "$file" 2>/dev/null   # ensure file is unlinked prior to use
+  command rm "$file" 2>/dev/null   # ensure file is unlinked prior to use
   echo "$file"
 }
 
@@ -302,7 +304,7 @@ draft ()
   typeset file=$(_temp_filename_for draft)
   typeset -f "$func" | _strip_trailing_whitespace | _strip_semicolons > "$file"
   _transcribe "$func" "$file" Draft "Initial draft"
-  rm "$file" 2>/dev/null
+  command rm "$file" 2>/dev/null
   revise "$func"
 }
 
@@ -465,7 +467,7 @@ revise ()
     # zero-length files abort revision
     printf '%s\n' 'zero-length file, revision aborted!'
   fi
-  rm "$temp"
+  command rm "$temp"
 }
 
 write ()
