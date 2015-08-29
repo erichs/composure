@@ -1,3 +1,8 @@
+1.2.4 / 2015-08-29
+==================
+* Minor updates for latest shellcheck.net codes
+* Fix write() function, thanks @IsoLinearCHiP!
+
 1.2.3 / 2015-04-01
 ==================
 * Minor fixes for latest shellcheck.net codes

@@ -3,7 +3,7 @@
 # composure - by erichs
 # light-hearted functions for intuitive shell programming
 
-# version: 1.2.3
+# version: 1.2.4
 # latest source available at http://git.io/composure
 
 # install: source this script in your ~/.profile or ~/.${SHELL}rc script
@@ -502,7 +502,8 @@ unset f
 END
 
 # write out function definitons
-typeset -f "cite $@"
+# shellcheck disable=SC2034
+typeset -f cite "$@"
 
 cat <<END
 main() {
