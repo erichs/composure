@@ -79,9 +79,9 @@ _prompt ()
   typeset result
   case "$(_shell)" in
     bash)
-      read -e -p "$prompt" result;;
+      read -r -e -p "$prompt" result;;
     *)
-      echo -n "$prompt" >&2; read result;;
+      echo -n "$prompt" >&2; read -r result;;
   esac
   echo "$result"
 }
@@ -95,7 +95,10 @@ _add_composure_file ()
   typeset composure_dir=$(_get_composure_dir)
 
   (
-    cd "$composure_dir"
+    if ! cd "$composure_dir"; then
+      printf "%s\n" "Oops! Can't find $composure_dir!"
+      return
+    fi
     if git rev-parse 2>/dev/null; then
       if [ ! -f "$file" ]; then
         printf "%s\n" "Oops! Couldn't find $file to version it for you..."
@@ -131,7 +134,7 @@ _transcribe ()
       typeset valid=0
       while [ $valid != 1 ]; do
         printf "\n%s" 'would you like to create one? y/n: '
-        read input
+        read -r input
         case $input in
           y|yes|Y|Yes|YES)
             (
@@ -208,6 +211,7 @@ _load_composed_functions () {
 
   typeset inc
   for inc in $(_list_composure_files); do
+    # shellcheck source=/dev/null
     . "$inc"
   done
 }
@@ -329,7 +333,7 @@ glossary ()
     fi
     typeset about="$(typeset -f -- $func | metafor about)"
     typeset aboutline=
-    echo "$about" | fmt | while read aboutline; do
+    echo "$about" | fmt | while read -r aboutline; do
       _letterpress "$aboutline" "$func" "$maxwidth"
       func=" " # only display function name once
     done
@@ -389,7 +393,7 @@ reference ()
 
   if [ -n "$(typeset -f $func | metafor param)" ]; then
     printf "parameters:\n"
-    typeset -f $func | metafor param | while read line
+    typeset -f $func | metafor param | while read -r line
     do
       _letterpress "$line"
     done
@@ -397,7 +401,7 @@ reference ()
 
   if [ -n "$(typeset -f $func | metafor example)" ]; then
     printf "examples:\n"
-    typeset -f $func | metafor example | while read line
+    typeset -f $func | metafor example | while read -r line
     do
       _letterpress "$line"
     done
@@ -448,15 +452,17 @@ revise ()
     typeset edit='N'
 
     # source edited file
+    # shellcheck source=/dev/null
     . "$temp" || edit='Y'
 
     while [ $edit = 'Y' ]; do
       echo -n "Re-edit? Y/N: "
-      read edit
+      read -r edit
       case $edit in
          y|yes|Y|Yes|YES)
            edit='Y'
            $EDITOR "$temp"
+           # shellcheck source=/dev/null
            . "$temp" && edit='N';;
          *)
            edit='N';;
