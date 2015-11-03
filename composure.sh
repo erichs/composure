@@ -165,18 +165,7 @@ _transcribe ()
 
 _typeset_functions ()
 {
-  # unfortunately, there does not seem to be a easy, portable way to list just the
-  # names of the defined shell functions...
-
-  case "$(_shell)" in
-    sh|bash)
-      typeset -F | awk '{print $3}'
-      ;;
-    *)
-      # trim everything following '()' in ksh/zsh
-      typeset +f | sed 's/().*$//'
-      ;;
-  esac
+  basename $(_get_composure_dir)/*.inc | sed -e 's/\.inc$//'
 }
 
 _shell () {
