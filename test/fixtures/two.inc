@@ -1,4 +1,0 @@
-two () {
-	one
-	echo 'two'
-}

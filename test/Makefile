@@ -10,7 +10,6 @@ runshellcheck:
 	./runshellcheck.sh
 
 tests:
-	./wvtestrun $(MAKE) runtests
 	./wvtestrun $(MAKE) runshellcheck
 
 clean::
