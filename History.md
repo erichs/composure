@@ -1,52 +1,58 @@
+1.3   / 2015-11-04
+==================
+  * Make glossary() faster by not introspecting loaded shell functions
+  * Remove brittle and incomplete test suite
+  * Fixes for shellcheck.net
+
 1.2.4 / 2015-08-29
 ==================
-* Minor updates for latest shellcheck.net codes
-* Fix write() function, thanks @IsoLinearCHiP!
+  * Minor updates for latest shellcheck.net codes
+  * Fix write() function, thanks @IsoLinearCHiP!
 
 1.2.3 / 2015-04-01
 ==================
-* Minor fixes for latest shellcheck.net codes
-* Better wrapping for long about metadata
-* Support leading hyphens in function names
+  * Minor fixes for latest shellcheck.net codes
+  * Better wrapping for long about metadata
+  * Support leading hyphens in function names
 
 1.2.2 / 2015-01-16
 ==================
 various fixes, including contributions from:
-* @nilbus
-* @martinlauer
-* @DrVanScott
+  * @nilbus
+  * @martinlauer
+  * @DrVanScott
 
 1.2.1 / 2014-01-05
 ==================
-* Tab completion for revise(), new compost() func
-* Improve shell determination and bootstrapping sequence
+  * Tab completion for revise(), new compost() func
+  * Improve shell determination and bootstrapping sequence
 
 1.2.0 / 2013-11-17
 ==================
-* Auto-load composed functions
+  * Auto-load composed functions
 
 1.1.1 / 2013-10-29
 ==================
-* Fix issue with zsh noclobber option
+  * Fix issue with zsh noclobber option
 
 1.1.0 / 2013-10-23
 ==================
-* Auto-revise drafted functions
-* Populate author metadata on draft
-* Use tpope-style commit msgs
-* Respect XDG_DATA_HOME
+  * Auto-revise drafted functions
+  * Populate author metadata on draft
+  * Use tpope-style commit msgs
+  * Respect XDG_DATA_HOME
 
 1.0.4 / 2013-08-30
 ==================
 
-* increase letterpress spacing
-* refactor composure extras
+  * increase letterpress spacing
+  * refactor composure extras
 
 1.0.3 / 2012-11-29
 ==================
 
-* make revise() smarter
-* write() includes shebang and main() invocation
+  * make revise() smarter
+  * write() includes shebang and main() invocation
 
 1.0.2 / 2012-05-24
 ==================

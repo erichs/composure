@@ -3,7 +3,7 @@
 # composure - by erichs
 # light-hearted functions for intuitive shell programming
 
-# version: 1.2.4
+# version: 1.3
 # latest source available at http://git.io/composure
 
 # install: source this script in your ~/.profile or ~/.${SHELL}rc script
@@ -165,7 +165,7 @@ _transcribe ()
 
 _typeset_functions ()
 {
-  basename $(_get_composure_dir)/*.inc | sed -e 's/\.inc$//'
+  basename "$(_get_composure_dir)"/*.inc | sed -e 's/\.inc$//'
 }
 
 _shell () {
@@ -270,7 +270,7 @@ draft ()
   fi
 
   # aliases bind tighter than function names, disallow them
-  if [ -n "$(type -a "$func" 2>/dev/null | grep 'is.*alias')" ]; then
+  if type -a "$func" 2>/dev/null | grep -q 'is.*alias'; then
     printf '%s\n' "sorry, $(type -a "$func"). please choose another name."
     return
   fi
@@ -280,6 +280,7 @@ draft ()
     # some versions of 'fix command, fc' need corrective lenses...
     typeset lines=$(fc -ln -1 | grep -q draft && echo 2 || echo 1)
     # parse last command from fc output
+    # shellcheck disable=SC2086
     cmd=$(fc -ln -$lines | head -1 | sed 's/^[[:blank:]]*//')
   else
     # parse command from history line number
