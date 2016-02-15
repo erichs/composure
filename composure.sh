@@ -167,6 +167,9 @@ _typeset_functions ()
 {
   typeset f
   for f in "$(_get_composure_dir)"/*.inc; do
+    # Without nullglob, we'll get back the glob
+    [[ -f "$f" ]] || continue
+
     f="${f##*/}"
     f="${f%.inc}"
     echo "$f"
