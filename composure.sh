@@ -165,7 +165,12 @@ _transcribe ()
 
 _typeset_functions ()
 {
-  basename "$(_get_composure_dir)"/*.inc | sed -e 's/\.inc$//'
+  typeset f
+  for f in "$(_get_composure_dir)"/*.inc; do
+    f="${f##*/}"
+    f="${f%.inc}"
+    echo "$f"
+  done
 }
 
 _shell () {
