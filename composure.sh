@@ -3,7 +3,7 @@
 # composure - by erichs
 # light-hearted functions for intuitive shell programming
 
-# version: 1.3
+# version: 1.3.1
 # latest source available at http://git.io/composure
 
 # install: source this script in your ~/.profile or ~/.${SHELL}rc script
@@ -14,6 +14,7 @@
 _bootstrap_composure() {
   _generate_metadata_functions
   _load_composed_functions
+  _determine_printf_cmd
 }
 
 _get_composure_dir ()
@@ -50,7 +51,16 @@ _letterpress ()
     return
   fi
 
-  printf "%-*s%s\n" "$leftwidth" "$leftcol" "$rightcol"
+  $_printf_cmd "%-*s%s\n" "$leftwidth" "$leftcol" "$rightcol"
+}
+
+_determine_printf_cmd() {
+  if [ -z "$_printf_cmd" ]; then
+    _printf_cmd=printf
+    # prefer GNU gprintf if available
+    [ -x "$(which gprintf)" ] && _printf_cmd=gprintf
+    export _printf_cmd
+  fi
 }
 
 _longest_function_name_length ()
@@ -173,7 +183,7 @@ _typeset_functions ()
     f="${f##*/}"
     f="${f%.inc}"
     echo "$f"
-  done
+  done | cat - <(echo "cite\ndraft\nglossary\nmetafor\nreference\nrevise\nwrite") | sort | uniq
 }
 
 _shell () {
