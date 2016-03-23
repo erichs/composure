@@ -65,7 +65,7 @@ _determine_printf_cmd() {
 
 _longest_function_name_length ()
 {
-   _typeset_functions | awk 'BEGIN{ maxlength=0 }
+  echo "$1" | awk 'BEGIN{ maxlength=0 }
   {
   for(i=1;i<=NF;i++)
     if (length($i)>maxlength)
@@ -329,9 +329,10 @@ glossary ()
   group 'composure'
 
   typeset targetgroup=${1:-}
-  typeset maxwidth=$(_longest_function_name_length | awk '{print $1 + 5}')
+  typeset functionlist="$(_typeset_functions)"
+  typeset maxwidth=$(_longest_function_name_length "$functionlist" | awk '{print $1 + 5}')
 
-  for func in $(_typeset_functions); do
+  for func in $functionlist; do
 
     if [ "X${targetgroup}X" != "XX" ]; then
       typeset group="$(typeset -f -- $func | metafor group)"
