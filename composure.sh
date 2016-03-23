@@ -193,7 +193,7 @@ _typeset_functions_about ()
 {
   typeset f
   for f in $(_typeset_functions); do
-    typeset -f "$f" | grep -qE "^about | about " && echo "$f"
+    typeset -f "$f" | grep -qE "^about[[:space:]]|[[:space:]]about[[:space:]]" && echo "$f"
   done
 }
 
@@ -343,7 +343,7 @@ glossary ()
   typeset functionlist="$(_typeset_functions_about)"
   typeset maxwidth=$(_longest_function_name_length "$functionlist" | awk '{print $1 + 5}')
 
-  for func in $functionlist; do
+  for func in $(echo $functionlist); do
 
     if [ "X${targetgroup}X" != "XX" ]; then
       typeset group="$(typeset -f -- $func | metafor group)"
