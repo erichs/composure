@@ -58,7 +58,7 @@ _determine_printf_cmd() {
   if [ -z "$_printf_cmd" ]; then
     _printf_cmd=printf
     # prefer GNU gprintf if available
-    [ -x "$(which gprintf)" ] && _printf_cmd=gprintf
+    [ -x "$(which gprintf 2>/dev/null)" ] && _printf_cmd=gprintf
     export _printf_cmd
   fi
 }
