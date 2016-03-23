@@ -175,15 +175,26 @@ _transcribe ()
 
 _typeset_functions ()
 {
-  typeset f
-  for f in "$(_get_composure_dir)"/*.inc; do
-    # Without nullglob, we'll get back the glob
-    [[ -f "$f" ]] || continue
+  # unfortunately, there does not seem to be a easy, portable way to list just the
+  # names of the defined shell functions...
 
-    f="${f##*/}"
-    f="${f%.inc}"
-    echo "$f"
-  done | cat - <(echo "cite\ndraft\nglossary\nmetafor\nreference\nrevise\nwrite") | sort | uniq
+  case "$(_shell)" in
+    sh|bash)
+      typeset -F | awk '{print $3}'
+      ;;
+    *)
+      # trim everything following '()' in ksh/zsh
+      typeset +f | sed 's/().*$//'
+      ;;
+  esac
+}
+
+_typeset_functions_about ()
+{
+  typeset f
+  for f in $(_typeset_functions); do
+    typeset -f "$f" | grep -qE "^about | about " && echo "$f"
+  done
 }
 
 _shell () {
@@ -329,7 +340,7 @@ glossary ()
   group 'composure'
 
   typeset targetgroup=${1:-}
-  typeset functionlist="$(_typeset_functions)"
+  typeset functionlist="$(_typeset_functions_about)"
   typeset maxwidth=$(_longest_function_name_length "$functionlist" | awk '{print $1 + 5}')
 
   for func in $functionlist; do
