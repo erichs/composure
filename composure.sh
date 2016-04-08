@@ -193,7 +193,7 @@ _typeset_functions_about ()
 {
   typeset f
   for f in $(_typeset_functions); do
-    typeset -f "$f" | grep -qE "^about[[:space:]]|[[:space:]]about[[:space:]]" && echo "$f"
+    typeset -f -- "$f" | grep -qE "^about[[:space:]]|[[:space:]]about[[:space:]]" && echo -- "$f"
   done
 }
 
