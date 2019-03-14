@@ -201,7 +201,7 @@ _shell () {
   # here's a hack I modified from a StackOverflow post:
   # get the ps listing for the current process ($$), and print the last column (CMD)
   # stripping any leading hyphens shells sometimes throw in there
-  typeset this=$(ps -p $$ | tail -1 | awk '{print $NF}' | sed 's/^-*//')
+  typeset this=$(ps -o comm -p $$ | tail -1 | awk '{print $NF}' | sed 's/^-*//')
   echo "${this##*/}"  # e.g. /bin/bash => bash
 }
 
