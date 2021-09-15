@@ -379,7 +379,7 @@ metafor ()
   # 'grep' for the metadata keyword, and then parse/filter the matching line
 
   # grep keyword # strip trailing '|"|; # ignore thru keyword and leading '|"
-  sed -n "/$keyword / s/['\";]*\$//;s/^[ 	]*$keyword ['\"]*\([^([].*\)*\$/\1/p"
+  sed -n "/$keyword / s/['\";]*\$//;s/^[ 	]*\(: _\)*$keyword ['\"]*\([^([].*\)*\$/\2/p"
 }
 
 reference ()
