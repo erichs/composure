@@ -38,9 +38,10 @@ _get_author_name ()
   done
 }
 
+_composure_keywords=('about' 'author' 'example' 'group' 'param' 'version')
 _composure_keywords ()
 {
-  echo "about author example group param version"
+  echo "${_composure_keywords[@]}"
 }
 
 _letterpress ()
@@ -207,7 +208,7 @@ _shell () {
 
 _generate_metadata_functions() {
   typeset f
-  for f in $(_composure_keywords)
+  for f in "${_composure_keywords[@]}"
   do
     eval "$f() { :; }"
   done
@@ -514,7 +515,7 @@ echo "#!/usr/bin/env ${SHELL##*/}"
 
 # bootstrap metadata
 cat <<END
-for f in $(_composure_keywords)
+for f in "${_composure_keywords[@]}"
 do
   eval "\$f() { :; }"
 done
