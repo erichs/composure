@@ -78,7 +78,8 @@ _longest_function_name_length ()
 
 _temp_filename_for ()
 {
-  typeset file="$(mktemp "/tmp/$1.XXXX")" && echo "$file"
+  typeset file
+  file="$(mktemp "/tmp/$1.XXXX")" && echo "$file"
 }
 
 _prompt ()
