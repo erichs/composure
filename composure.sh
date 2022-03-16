@@ -155,9 +155,8 @@ _transcribe ()
               echo "composure stores your function definitions here" > README.txt
               git add README.txt
               git commit -m 'initial commit'
-            )
+            ) || _transcribe "$func" "$file" "$operation" "$comment"
             # if at first you don't succeed...
-            _transcribe "$func" "$file" "$operation" "$comment"
             valid=1
             ;;
           n|no|N|No|NO)
