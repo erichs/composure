@@ -19,11 +19,7 @@ _bootstrap_composure() {
 
 _get_composure_dir ()
 {
-  if [ -n "${XDG_DATA_HOME:-}" ]; then
-    echo "$XDG_DATA_HOME/composure"
-  else
-    echo "$HOME/.local/composure"
-  fi
+    echo "${XDG_DATA_HOME:-$HOME/.local}/composure"
 }
 
 _get_author_name ()
