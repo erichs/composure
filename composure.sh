@@ -75,9 +75,8 @@ _longest_function_name_length ()
 
 _temp_filename_for ()
 {
-  typeset file="$(mktemp "/tmp/$1.XXXX")"
-  command rm "$file" 2>/dev/null   # ensure file is unlinked prior to use
-  echo "$file"
+  typeset file
+  file="$(mktemp "/tmp/$1.XXXX")" && echo "$file"
 }
 
 _prompt ()
