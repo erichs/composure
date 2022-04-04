@@ -3,11 +3,16 @@
 # composure - by erichs
 # light-hearted functions for intuitive shell programming
 
-# version: 1.3.1
+# version: 1.4.0
 # latest source available at http://git.io/composure
 
 # install: source this script in your ~/.profile or ~/.${SHELL}rc script
+# save lookup.pl in the same dir you saved this file into to enable
+# faster metadata lookups.
 # known to work on bash, zsh, and ksh93
+
+_composure_source_dir="$(dirname $(readlink -f ${BASH_SOURCE[0]}))"
+_composure_lookup_tool="${_composure_source_dir}/lookup.pl"
 
 # 'plumbing' functions
 
@@ -204,7 +209,7 @@ _generate_metadata_functions() {
   typeset f
   for f in "${_composure_keywords[@]}"
   do
-    type "$f" > /dev/null || eval "$f() { :; }"
+    type "$f" > /dev/null 2>&1 || eval "$f() { :; }"
   done
 }
 
@@ -334,6 +339,11 @@ glossary ()
   example '$ glossary misc'
   group 'composure'
 
+  if [ -f "${_composure_lookup_tool}" ]; then
+    "${_composure_lookup_tool}" glossary "$@"
+    return $?
+  fi
+
   typeset targetgroup=${1:-}
   typeset functionlist="$(_typeset_functions_about)"
   typeset maxwidth=$(_longest_function_name_length "$functionlist" | awk '{print $1 + 5}')
@@ -353,6 +363,9 @@ glossary ()
       func=" " # only display function name once
     done
   done
+
+  echo
+  echo DEPRECATED: consider using lookup alias.
 }
 
 metafor ()
@@ -386,9 +399,17 @@ reference ()
 
   typeset func=$1
   if [ -z "$func" ]; then
-    printf '%s\n' 'missing parameter(s)'
-    reference reference
+    printf '%s\n' 'missing function name parameter'
     return
+  fi
+
+  if [ -f "${_composure_lookup_tool}" ]; then
+    if [ ! -f "$(_get_composure_dir)/${func}.inc" ]; then
+      echo "Unknown function: $func. Try 'glossary' for a listing of available functions."
+      return 1
+    fi
+    "${_composure_lookup_tool}" reference "$@"
+    return $?
   fi
 
   typeset line
@@ -421,6 +442,8 @@ reference ()
       _letterpress "$line"
     done
   fi
+
+  echo DEPRECATED: consider using lookup alias.
 }
 
 revise ()
@@ -535,7 +558,7 @@ _bootstrap_composure
 : <<EOF
 License: The MIT License
 
-Copyright © 2012, 2016 Erich Smith
+Copyright © 2012, 2022 Erich Smith
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this
 software and associated documentation files (the "Software"), to deal in the Software

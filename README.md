@@ -30,24 +30,19 @@ Please feel free to open an issue if you have any difficulties on your system.
 
 ## Installing
 
-Put composure.sh where you'd like it to live and source it from your
-shell's profile or rc file.
+Clone this repo, into a directory of your choice and source it from your shell's
+profile or rc file.
 
 On Bash:
 
 ```bash
     cd /your/favorite/directory
-    curl -L http://git.io/composure > composure.sh
-    chmod +x composure.sh
+    git clone https://github.com/erichs/composure.git
+    cd composure
     echo "source $(pwd)/composure.sh" >> ~/.bashrc   # or, ~/.bash_profile on osx
 ```
 
-Users upgrading from a version prior to 1.1.0 need to execute the following commands, as the directory for composure's local repo has changed:
-
-```bash
-  mkdir ~/.local 2>/dev/null
-  mv ~/.composure ~/.local/composure
-```
+Note for users with versions prior to 1.4.0: Previous installation methods will work, but cloning the repo is now recommended, as it makes the `glossary` and `reference` commands 100x faster.
 
 ## Craft - Draft - Revise - Write
 
