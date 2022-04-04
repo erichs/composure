@@ -320,7 +320,7 @@ draft ()
   $cmd;
 }"
   typeset file=$(_temp_filename_for draft)
-  typeset -f "$func" | _strip_trailing_whitespace | _strip_semicolons > "$file"
+  typeset -f "$func" | _strip_trailing_whitespace | _strip_semicolons >> "$file"
   _transcribe "$func" "$file" Draft "Initial draft"
   command rm "$file" 2>/dev/null
   revise "$func"
@@ -451,10 +451,10 @@ revise ()
   # populate tempfile...
   if [ "$source" = 'env' ] || [ ! -f "$composure_dir/$func.inc" ]; then
     # ...with ENV if specified or not previously versioned
-    typeset -f $func > $temp
+    typeset -f $func >> $temp
   else
     # ...or with contents of latest git revision
-    cat "$composure_dir/$func.inc" > "$temp"
+    cat "$composure_dir/$func.inc" >> "$temp"
   fi
 
   if [ -z "${EDITOR:-}" ]
