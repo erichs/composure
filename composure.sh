@@ -21,7 +21,7 @@ _get_self_dir () {
     pushd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" > /dev/null && {
         SCRIPT_DIR="$PWD"
         # shellcheck disable=SC2164
-        popd > /dev/null
+        popd > /dev/null 2>&1
     }
     echo "$SCRIPT_DIR"
   )
