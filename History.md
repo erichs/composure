@@ -1,4 +1,15 @@
-1.3   / 2015-11-04
+1.4.0 / 2022-04-04
+==================
+  * Reimplement `glossary` and `reference` with external script for performance.
+  * Many fixes, including contributions from:
+    * @N4M3Z
+    * @akatrevorjay
+    * @dotmpe
+    * @gaelicWizard
+    * @EmilySeville7cfg
+    * @junkblocker
+
+ 1.3   / 2015-11-04
 ==================
   * Make glossary() faster by not introspecting loaded shell functions
   * Remove brittle and incomplete test suite
