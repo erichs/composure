@@ -18,15 +18,18 @@ _get_self_dir () {
   # this appears to work across bash and zsh, but may not work on other shells :(
   (
     SCRIPT_DIR=''
-    pushd "$(dirname "$(readlink -f "$BASH_SOURCE")")" > /dev/null && {
+    pushd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" > /dev/null && {
         SCRIPT_DIR="$PWD"
+        # shellcheck disable=SC2164
         popd > /dev/null
     }
     echo "$SCRIPT_DIR"
   )
 }
 
+# lookup tool expects to be in the same dir as this script.
 _composure_lookup_tool="$(_get_self_dir)/lookup.pl"
+_composure_dir="${XDG_DATA_HOME:-$HOME/.local}/composure"
 
 _bootstrap_composure() {
   _generate_metadata_functions
@@ -35,15 +38,10 @@ _bootstrap_composure() {
   _determine_printf_cmd
 }
 
-_get_composure_dir ()
-{
-    echo "${XDG_DATA_HOME:-$HOME/.local}/composure"
-}
-
 _get_author_name ()
 {
   typeset name localname
-  localname="$(git --git-dir "$(_get_composure_dir)/.git" config --get user.name)"
+  localname="$(git --git-dir "${_composure_dir}/.git" config --get user.name)"
   for name in "${GIT_AUTHOR_NAME:-}" "$localname"; do
     if [ -n "$name" ]; then
       echo "$name"
@@ -71,9 +69,9 @@ _letterpress ()
 
 _determine_printf_cmd() {
   if [ -z "${_printf_cmd:-}" ]; then
-    _printf_cmd=printf
+    _printf_cmd="printf"
     # prefer GNU gprintf if available
-    [ -x "$(which gprintf 2>/dev/null)" ] && _printf_cmd=gprintf
+    [ -x "$(which gprintf 2>/dev/null)" ] && _printf_cmd="gprintf"
     export _printf_cmd
   fi
 }
@@ -116,11 +114,10 @@ _add_composure_file ()
   typeset file="$2"
   typeset operation="$3"
   typeset comment="${4:-}"
-  typeset composure_dir=$(_get_composure_dir)
 
   (
-    if ! cd "$composure_dir"; then
-      printf "%s\n" "Oops! Can't find $composure_dir!"
+    if ! cd "${_composure_dir}"; then
+      printf "%s\n" "Oops! Can't find ${_composure_dir}!"
       return
     fi
     if git rev-parse 2>/dev/null; then
@@ -128,7 +125,7 @@ _add_composure_file ()
         printf "%s\n" "Oops! Couldn't find $file to version it for you..."
         return
       fi
-      cp "$file" "$composure_dir/$func.inc"
+      cp "$file" "${_composure_dir}/$func.inc"
       git add --all .
       if [ -z "$comment" ]; then
         comment="$(_prompt 'Git Comment: ')"
@@ -144,16 +141,15 @@ _transcribe ()
   typeset file="$2"
   typeset operation="$3"
   typeset comment="${4:-}"
-  typeset composure_dir=$(_get_composure_dir)
 
   if git --version >/dev/null 2>&1; then
-    if [ -d "$composure_dir" ]; then
+    if [ -d "$_composure_dir" ]; then
       _add_composure_file "$func" "$file" "$operation" "$comment"
     else
       if [ "${USE_COMPOSURE_REPO:-}" = "0" ]; then
         return  # if you say so...
       fi
-      printf "%s\n" "I see you don't have a $composure_dir repo..."
+      printf "%s\n" "I see you don't have a $_composure_dir repo..."
       typeset input=''
       typeset valid=0
       while [ $valid != 1 ]; do
@@ -163,8 +159,8 @@ _transcribe ()
           y|yes|Y|Yes|YES)
             (
               echo 'creating git repository for your functions...'
-              mkdir -p "$composure_dir" || return 1
-              cd "$composure_dir" || return 1
+              mkdir -p "$_composure_dir" || return 1
+              cd "$_composure_dir" || return 1
               git init
               echo "composure stores your function definitions here" > README.txt
               git add README.txt
@@ -227,8 +223,7 @@ _generate_metadata_functions() {
 }
 
 _list_composure_files () {
-  typeset composure_dir="$(_get_composure_dir)"
-  [ -d "$composure_dir" ] && find "$composure_dir" -maxdepth 1 -name '*.inc'
+  [ -d "$_composure_dir" ] && find "$_composure_dir" -maxdepth 1 -name '*.inc'
 }
 
 _load_composed_functions () {
@@ -256,12 +251,11 @@ _strip_semicolons () {
 }
 
 _persist_composure_functions () {
-  typeset composure_dir="$(_get_composure_dir)"
-  if [ ! -d "$composure_dir" ]; then
+  if [ ! -d "$_composure_dir" ]; then
     return
   fi
   for func in cite draft glossary metafor reference revise write; do
-    typeset -f $func > "$composure_dir/${func}.inc"
+    typeset -f "$func" > "${_composure_dir}/${func}.inc"
   done
 }
 
@@ -370,7 +364,8 @@ glossary ()
   typeset functionlist="$(_typeset_functions_about)"
   typeset maxwidth=$(_longest_function_name_length "$functionlist" | awk '{print $1 + 5}')
 
-  for func in $(echo $functionlist); do
+  # shellcheck disable=SC2116,SC2086  
+  for func in $(echo "$functionlist"); do
 
     if [ "X${targetgroup}X" != "XX" ]; then
       typeset group="$(typeset -f -- $func | metafor group)"
@@ -426,7 +421,7 @@ reference ()
   fi
 
   if [ -f "${_composure_lookup_tool}" ]; then
-    if [ ! -f "$(_get_composure_dir)/${func}.inc" ]; then
+    if [ ! -f "${_composure_dir}/${func}.inc" ]; then
       echo "Unknown function: $func. Try 'glossary' for a listing of available functions."
       return 1
     fi
@@ -439,27 +434,27 @@ reference ()
   typeset about="$(typeset -f "$func" | metafor about)"
   _letterpress "$about" "$func"
 
-  typeset author="$(typeset -f $func | metafor author)"
+  typeset author="$(typeset -f "$func" | metafor author)"
   if [ -n "$author" ]; then
     _letterpress "$author" 'author:'
   fi
 
-  typeset version="$(typeset -f $func | metafor version)"
+  typeset version="$(typeset -f "$func" | metafor version)"
   if [ -n "$version" ]; then
     _letterpress "$version" 'version:'
   fi
 
-  if [ -n "$(typeset -f $func | metafor param)" ]; then
+  if [ -n "$(typeset -f "$func" | metafor param)" ]; then
     printf "parameters:\n"
-    typeset -f $func | metafor param | while read -r line
+    typeset -f "$func" | metafor param | while read -r line
     do
       _letterpress "$line"
     done
   fi
 
-  if [ -n "$(typeset -f $func | metafor example)" ]; then
+  if [ -n "$(typeset -f "$func" | metafor example)" ]; then
     printf "examples:\n"
-    typeset -f $func | metafor example | while read -r line
+    typeset -f "$func" | metafor example | while read -r line
     do
       _letterpress "$line"
     done
@@ -491,20 +486,19 @@ revise ()
     return
   fi
 
-  typeset composure_dir=$(_get_composure_dir)
   typeset temp=$(_temp_filename_for revise)
   # populate tempfile...
-  if [ "$source" = 'env' ] || [ ! -f "$composure_dir/$func.inc" ]; then
+  if [ "$source" = 'env' ] || [ ! -f "${_composure_dir}/$func.inc" ]; then
     # ...with ENV if specified or not previously versioned
-    typeset -f $func >> $temp
+    typeset -f "$func" >> "$temp"
   else
     # ...or with contents of latest git revision
-    cat "$composure_dir/$func.inc" >> "$temp"
+    cat "${_composure_dir}/$func.inc" >> "$temp"
   fi
 
   if [ -z "${EDITOR:-}" ]
   then
-    typeset EDITOR=vi
+    typeset EDITOR="vi"
   fi
 
   $EDITOR "$temp"
