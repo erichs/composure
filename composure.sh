@@ -11,13 +11,26 @@
 # faster metadata lookups.
 # known to work on bash, zsh, and ksh93
 
-_composure_source_dir="$(dirname $(readlink -f ${BASH_SOURCE[0]}))"
-_composure_lookup_tool="${_composure_source_dir}/lookup.pl"
-
 # 'plumbing' functions
+
+_get_self_dir () {
+  # https://stackoverflow.com/questions/59895/how-can-i-get-the-source-directory-of-a-bash-script-from-within-the-script-itsel
+  # this appears to work across bash and zsh, but may not work on other shells :(
+  (
+    SCRIPT_DIR=''
+    pushd "$(dirname "$(readlink -f "$BASH_SOURCE")")" > /dev/null && {
+        SCRIPT_DIR="$PWD"
+        popd > /dev/null
+    }
+    echo "$SCRIPT_DIR"
+  )
+}
+
+_composure_lookup_tool="$(_get_self_dir)/lookup.pl"
 
 _bootstrap_composure() {
   _generate_metadata_functions
+  _persist_composure_functions
   _load_composed_functions
   _determine_printf_cmd
 }
@@ -242,6 +255,15 @@ _strip_semicolons () {
   sed -e 's/;$//'
 }
 
+_persist_composure_functions () {
+  typeset composure_dir="$(_get_composure_dir)"
+  if [ ! -d "$composure_dir" ]; then
+    return
+  fi
+  for func in cite draft glossary metafor reference revise write; do
+    typeset -f $func > "$composure_dir/${func}.inc"
+  done
+}
 
 # 'porcelain' functions
 
