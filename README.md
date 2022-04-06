@@ -46,7 +46,20 @@ Note for users with versions prior to 1.4.0: Previous installation methods will 
 
 ## Craft - Draft - Revise - Write
 
-<img src="http://yuml.me/47fcf7e2" />
+```mermaid
+journey
+    title Typical Usage
+    section Craft
+      Create Useful Shell Command: 1: Shell
+    section Draft
+      Give it a name with 'draft': 2: Editor, Git
+      Use your new shiny function: 3: Shell
+    section Revise
+      Edit/maintain your function with 'revise': 4: Editor, Git
+    section Write
+      Persist to shell scripts with 'write': 5: Shell
+      Profit $$$: 6: You
+```
 
 ### Crafting the command line
 
