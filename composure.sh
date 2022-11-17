@@ -18,7 +18,7 @@ _get_self_dir () {
   # this appears to work across bash and zsh, but may not work on other shells :(
   (
     SCRIPT_DIR=''
-    pushd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" > /dev/null && {
+    pushd "$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )" > /dev/null && {
         SCRIPT_DIR="$PWD"
         # shellcheck disable=SC2164
         popd > /dev/null 2>&1
@@ -291,7 +291,7 @@ cite ()
 
   typeset keyword
   for keyword in "$@"; do
-    type "$keyword" > /dev/null || eval "$keyword() { :; }"
+    type "$keyword" &> /dev/null || eval "$keyword() { :; }"
   done
 }
 
@@ -364,7 +364,7 @@ glossary ()
   typeset functionlist="$(_typeset_functions_about)"
   typeset maxwidth=$(_longest_function_name_length "$functionlist" | awk '{print $1 + 5}')
 
-  # shellcheck disable=SC2116,SC2086  
+  # shellcheck disable=SC2116,SC2086
   for func in $(echo "$functionlist"); do
 
     if [ "X${targetgroup}X" != "XX" ]; then
